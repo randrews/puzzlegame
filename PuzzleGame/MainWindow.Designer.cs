@@ -64,6 +64,7 @@
             // 
             // mapView1
             // 
+            this.mapView1.Controller = null;
             this.mapView1.Location = new System.Drawing.Point(0, 25);
             this.mapView1.Margin = new System.Windows.Forms.Padding(0);
             this.mapView1.Name = "mapView1";
@@ -78,11 +79,13 @@
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.mapView1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.Name = "MainWindow";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Puzzle Game";
             this.Load += new System.EventHandler(this.MainWindow_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainWindow_KeyDown);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);

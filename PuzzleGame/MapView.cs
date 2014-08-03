@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace PuzzleGame
@@ -47,6 +48,12 @@ namespace PuzzleGame
                     if (src != null) g.DrawImage(_image, dest, (Rectangle)src, GraphicsUnit.Pixel);
                 }
             }            
+        }
+
+        private void animationTimer_Tick(object sender, EventArgs e)
+        {
+            if (Controller != null) Controller.AnimationTick();
+            Refresh();
         }
     }
 }

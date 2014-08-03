@@ -3,6 +3,14 @@ using System.Windows.Forms;
 
 namespace PuzzleGame
 {
+    public enum Direction
+    {
+        Up,
+        Down,
+        Left,
+        Right
+    };
+
     static class Program
     {
         /// <summary>

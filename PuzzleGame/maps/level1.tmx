@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="24" tileheight="24">
  <tileset firstgid="1" name="Walls" tilewidth="24" tileheight="24">
-  <image source="../art/tiles.png" width="384" height="48"/>
+  <image source="../art/tiles.png" width="384" height="96"/>
   <tile id="17">
    <properties>
     <property name="Color" value="Red"/>
@@ -55,6 +55,21 @@
     <property name="Type" value="Gold"/>
    </properties>
   </tile>
+  <tile id="26">
+   <properties>
+    <property name="Type" value="Gold1"/>
+   </properties>
+  </tile>
+  <tile id="27">
+   <properties>
+    <property name="Type" value="Gold2"/>
+   </properties>
+  </tile>
+  <tile id="28">
+   <properties>
+    <property name="Type" value="Gold3"/>
+   </properties>
+  </tile>
   <tile id="29">
    <properties>
     <property name="Type" value="Crate"/>
@@ -68,6 +83,16 @@
   <tile id="31">
    <properties>
     <property name="Type" value="Exit"/>
+   </properties>
+  </tile>
+  <tile id="32">
+   <properties>
+    <property name="Type" value="Player1"/>
+   </properties>
+  </tile>
+  <tile id="33">
+   <properties>
+    <property name="Type" value="Player2"/>
    </properties>
   </tile>
  </tileset>

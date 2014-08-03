@@ -28,12 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.animationTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
+            // 
+            // animationTimer
+            // 
+            this.animationTimer.Enabled = true;
+            this.animationTimer.Tick += new System.EventHandler(this.animationTimer_Tick);
             // 
             // MapView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.DoubleBuffered = true;
             this.Name = "MapView";
             this.Size = new System.Drawing.Size(480, 480);
             this.ResumeLayout(false);
@@ -41,5 +49,7 @@
         }
 
         #endregion
+
+        private System.Windows.Forms.Timer animationTimer;
     }
 }

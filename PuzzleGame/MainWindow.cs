@@ -42,5 +42,31 @@ namespace PuzzleGame
                 Console.WriteLine(exc);
             }
         }
+
+        private void MainWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (Controller == null) return;
+
+            if (e.KeyCode == Keys.Up)
+            {
+                Controller.MoveCommand(Direction.Up);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.Down)
+            {
+                Controller.MoveCommand(Direction.Down);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.Left)
+            {
+                Controller.MoveCommand(Direction.Left);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.Right)
+            {
+                Controller.MoveCommand(Direction.Right);
+                e.SuppressKeyPress = true;
+            }
+        }
     }
 }
