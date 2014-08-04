@@ -31,12 +31,24 @@ namespace PuzzleGame
             base.OnPaint(e);
             if (Controller == null) return;
 
-            drawRectangles(Controller.Floors, e.Graphics);
-            drawRectangles(Controller.Walls, e.Graphics);
-            drawRectangles(Controller.GetItemRectangles(), e.Graphics);
+            DrawRectangles(Controller.Floors, e.Graphics);
+            DrawRectangles(Controller.Walls, e.Graphics);
+            DrawRectangles(Controller.GetItemRectangles(), e.Graphics);
+            DrawPlayer(e.Graphics);
         }
 
-        private void drawRectangles(Rectangle?[,] rectangles, Graphics g)
+        private void DrawPlayer(Graphics g)
+        {
+            if (Controller.Player.Rectangle != null && Controller.PlayerLocation != null)
+            {
+                Point p = (Point)Controller.PlayerLocation;
+                var dest = new Rectangle(p.X * 24, p.Y * 24, 24, 24);
+                var src = (Rectangle)Controller.Player.Rectangle;
+                g.DrawImage(_image, dest, src, GraphicsUnit.Pixel);
+            }
+        }
+
+        private void DrawRectangles(Rectangle?[,] rectangles, Graphics g)
         {
             for (int y = 0; y < rectangles.GetLength(1); y++)
             {

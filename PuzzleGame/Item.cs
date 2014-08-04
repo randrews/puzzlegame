@@ -17,14 +17,17 @@ namespace PuzzleGame
         public virtual void Animate() { }
     }
 
-    public class Player : Item
+    public class Player : AnimatableItem
     {
-        
+        public Player(AnimationFrame[] animationFrames) : base(animationFrames, 0)
+        {
+            Type = "Player";
+        }
     }
 
     public class Gold : AnimatableItem
     {
-        public Gold(AnimationFrame[] animationFrames, int startDelay) : base(animationFrames, startDelay)
+        public Gold(AnimationFrame[] animationFrames, int startTick) : base(animationFrames, startTick)
         {
             Type = "Gold";
         }

@@ -97,6 +97,7 @@ namespace PuzzleGame
                     {
                         if (PlayerLocation != null) throw new ArgumentException("Map contains multiple start locations");
                         PlayerLocation = new Point(tile.X, tile.Y);
+                        this.Player = new Player(PlayerAnimationFrames);
                     }
                     else
                     {

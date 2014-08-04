@@ -41,6 +41,7 @@ namespace PuzzleGame
         public Rectangle?[,] Floors { get; private set; }
 
         public Point? PlayerLocation { get; set; }
+        public Player Player { get; private set; }
 
         public GameController(MainWindow window, TmxMap map)
         {
@@ -131,6 +132,8 @@ namespace PuzzleGame
                 if (item == null) continue;
                 item.Animate();
             }
+
+            if(Player != null) Player.Animate();
         }
     }
 }
