@@ -11,6 +11,14 @@ namespace PuzzleGame
         Right
     };
 
+    public enum Color
+    {
+        Red,
+        Green,
+        Yellow,
+        Blue
+    };
+
     static class Program
     {
         /// <summary>

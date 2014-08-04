@@ -12,16 +12,55 @@ namespace PuzzleGame
         public Rectangle? Rectangle { get; set; }
 
         /// <summary>
+        /// Solid objects, the player can't walk through.
+        /// </summary>
+        public bool Solid { get; protected set; }
+
+        /// <summary>
+        /// Pushable objects (which must be solid) can be pushed around by the player, or other objects
+        /// </summary>
+        public bool Pushable { get; protected set; }
+
+        /// <summary>
+        /// Heavy objects can only be pushed one at a time, and only by the player.
+        /// Heavy implies pushable implies solid.
+        /// </summary>
+        public bool Heavy { get; protected set; }
+
+        /// <summary>
+        /// Dead items will be removed from the map by the controller at the end of each turn.
+        /// So, an item can mark itself as dead in order to remove itself.
+        /// </summary>
+        public bool Dead { get; protected set; }
+        /// <summary>
         /// Called by the controller when an animation timer event fires
         /// </summary>
         public virtual void Animate() { }
+
+        /// <summary>
+        /// Called when the player stands on top of a non-solid object
+        /// </summary>
+        /// <param name="player"></param>
+        public virtual void PlayerEnter(Player player) { }
+
+        public Item()
+        {
+            Dead = false;
+        }
     }
 
     public class Player : AnimatableItem
     {
+        /// <summary>
+        /// The number of keys of each color the player has
+        /// </summary>
+        public Dictionary<Color, int> Keys { get; private set; }
+
         public Player(AnimationFrame[] animationFrames) : base(animationFrames, 0)
         {
             Type = "Player";
+            Keys = new Dictionary<Color, int>();
+            Keys[Color.Red] = Keys[Color.Blue] = Keys[Color.Green] = Keys[Color.Yellow] = 0;
         }
     }
 
@@ -30,6 +69,32 @@ namespace PuzzleGame
         public Gold(AnimationFrame[] animationFrames, int startTick) : base(animationFrames, startTick)
         {
             Type = "Gold";
+            Solid = false;
+        }
+
+        public override void PlayerEnter(Player player)
+        {
+            base.PlayerEnter(player);
+            Dead = true;
+        }
+    }
+
+    public class Key : Item
+    {
+        public Color Color { get; private set; }
+
+        public Key(Color color, Rectangle rectangle)
+        {
+            Color = color;
+            Rectangle = rectangle;
+            Solid = false;
+        }
+
+        public override void PlayerEnter(Player player)
+        {
+            base.PlayerEnter(player);
+            player.Keys[Color]++;
+            Dead = true;
         }
     }
 }

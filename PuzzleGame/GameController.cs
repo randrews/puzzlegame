@@ -141,8 +141,25 @@ namespace PuzzleGame
                 newLocation.Y >= 0 && newLocation.Y < Walls.GetLength(1) && // Y in bounds
                 Walls[newLocation.X, newLocation.Y] == null) // No wall there
             {
-                PlayerLocation = newLocation;
+                // First, is there an item there? If not, we're good
+                if (Items[newLocation.X, newLocation.Y] == null)
+                    PlayerLocation = newLocation;
+                else
+                {
+                    var item = Items[newLocation.X, newLocation.Y];
+                    if (!item.Solid) // There's an item but it's not solid. Move on top of it, and tell it so
+                    {
+                        PlayerLocation = newLocation;
+                        item.PlayerEnter(Player);
+                    }
+                }
             }
+
+            // Now, remove any items that died this round
+            for (int y = 0; y < Items.GetLength(1); y++)
+                for (int x = 0; x < Items.GetLength(0); x++)
+                    if (Items[x, y] != null && Items[x, y].Dead)
+                        Items[x, y] = null;
         }
 
         /// <summary>

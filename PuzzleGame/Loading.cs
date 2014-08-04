@@ -88,20 +88,29 @@ namespace PuzzleGame
                 {
                     var type = tiles[tile.Gid].Properties["Type"];
                     Rectangle? rect = GidToRectangle(tile.Gid);
+                    if(rect == null) throw new ArgumentException("Invalid gid " + tile.Gid);
 
-                    if (type == "Gold")
+                    switch (type)
                     {
-                        cells[tile.X, tile.Y] = new Gold(GoldAnimationFrames, rand.Next(30));
-                    }
-                    else if (type == "Start") // Not actually an item, but shows up on the item layer
-                    {
-                        if (PlayerLocation != null) throw new ArgumentException("Map contains multiple start locations");
-                        PlayerLocation = new Point(tile.X, tile.Y);
-                        Player = new Player(PlayerAnimationFrames);
-                    }
-                    else
-                    {
-                        cells[tile.X, tile.Y] = new Item { Type = type, Rectangle = rect };
+                        case "Gold":
+                            cells[tile.X, tile.Y] = new Gold(GoldAnimationFrames, rand.Next(30));
+                            break;
+                        case "Key":
+                        {
+                            if( ! tilesetTile.Properties.ContainsKey("Color")) throw new ArgumentException("Key doesn't have a Color property");
+                            Color color;
+                            if( ! Enum.TryParse(tilesetTile.Properties["Color"], true, out color)) throw new ArgumentException("Key has unrecognized color " + tilesetTile.Properties["Color"]);
+                            cells[tile.X, tile.Y] = new Key(color, (Rectangle) rect);
+                        }
+                            break;
+                        case "Start":
+                            if (PlayerLocation != null) throw new ArgumentException("Map contains multiple start locations");
+                            PlayerLocation = new Point(tile.X, tile.Y);
+                            Player = new Player(PlayerAnimationFrames);
+                            break;
+                        default:
+                            cells[tile.X, tile.Y] = new Item { Type = type, Rectangle = rect };
+                            break;
                     }
                 }
             }
