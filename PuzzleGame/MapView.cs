@@ -31,8 +31,8 @@ namespace PuzzleGame
             base.OnPaint(e);
             if (Controller == null) return;
 
-            drawRectangles(Controller.GetFloors(), e.Graphics);
-            drawRectangles(Controller.GetWalls(), e.Graphics);
+            drawRectangles(Controller.Floors, e.Graphics);
+            drawRectangles(Controller.Walls, e.Graphics);
             drawRectangles(Controller.GetItemRectangles(), e.Graphics);
         }
 

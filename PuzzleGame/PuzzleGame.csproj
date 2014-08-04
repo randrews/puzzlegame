@@ -47,8 +47,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnimatableItem.cs" />
+    <Compile Include="Animations.cs" />
     <Compile Include="GameController.cs" />
     <Compile Include="Item.cs" />
+    <Compile Include="Loading.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
