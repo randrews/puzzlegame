@@ -9,7 +9,6 @@ namespace PuzzleGame
     {
         /// <summary>
         /// Return an array of src rectangles (in the map's image) to draw the wall layer
-        /// TODO: This assumes 24x24 tiles
         /// </summary>
         /// <returns></returns>
         private Rectangle?[,] LoadWalls()
@@ -52,7 +51,7 @@ namespace PuzzleGame
 
                     // Use that column, with the row of the original tile
                     // ReSharper disable once PossibleInvalidOperationException
-                    cells[x, y] = new Rectangle(column * 24, ((Rectangle)cells[x, y]).Y, 24, 24);
+                    cells[x, y] = new Rectangle(column * TileSize.Width, ((Rectangle)cells[x, y]).Y, TileSize.Width, TileSize.Height);
                 }
             }
             return cells;
@@ -133,6 +132,8 @@ namespace PuzzleGame
         {
             var tset = Map.Tilesets.First();
             var dict = new Dictionary<string, Rectangle>();
+
+            TileSize = new Size(tset.TileWidth, tset.TileHeight);
 
             foreach (var tile in tset.Tiles)
             {

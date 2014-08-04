@@ -42,7 +42,9 @@ namespace PuzzleGame
             if (Controller.Player.Rectangle != null && Controller.PlayerLocation != null)
             {
                 Point p = (Point)Controller.PlayerLocation;
-                var dest = new Rectangle(p.X * 24, p.Y * 24, 24, 24);
+                int w = Controller.TileSize.Width;
+                int h = Controller.TileSize.Height;
+                var dest = new Rectangle(p.X * w, p.Y * h, w, h);
                 var src = (Rectangle)Controller.Player.Rectangle;
                 g.DrawImage(_image, dest, src, GraphicsUnit.Pixel);
             }
@@ -50,11 +52,14 @@ namespace PuzzleGame
 
         private void DrawRectangles(Rectangle?[,] rectangles, Graphics g)
         {
+            int w = Controller.TileSize.Width;
+            int h = Controller.TileSize.Height;
+
             for (int y = 0; y < rectangles.GetLength(1); y++)
             {
                 for (int x = 0; x < rectangles.GetLength(0); x++)
                 {
-                    var dest = new Rectangle(x * 24, y * 24, 24, 24);
+                    var dest = new Rectangle(x * w, y * h, w, h);
                     var src = rectangles[x, y];
 
                     if (src != null) g.DrawImage(_image, dest, (Rectangle)src, GraphicsUnit.Pixel);

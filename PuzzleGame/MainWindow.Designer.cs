@@ -33,6 +33,7 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.openButton = new System.Windows.Forms.ToolStripButton();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.StatusLabel = new System.Windows.Forms.ToolStripLabel();
             this.mapView1 = new PuzzleGame.MapView();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -40,10 +41,11 @@
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openButton});
+            this.openButton,
+            this.StatusLabel});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(680, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(480, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -62,10 +64,18 @@
             this.openFileDialog.Filter = "Levels (*.tmx)|*.tmx";
             this.openFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog_FileOk);
             // 
+            // StatusLabel
+            // 
+            this.StatusLabel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.StatusLabel.Name = "StatusLabel";
+            this.StatusLabel.Size = new System.Drawing.Size(0, 22);
+            // 
             // mapView1
             // 
+            this.mapView1.BackColor = System.Drawing.Color.Black;
             this.mapView1.Controller = null;
-            this.mapView1.Location = new System.Drawing.Point(0, 25);
+            this.mapView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mapView1.Location = new System.Drawing.Point(0, 0);
             this.mapView1.Margin = new System.Windows.Forms.Padding(0);
             this.mapView1.Name = "mapView1";
             this.mapView1.Size = new System.Drawing.Size(480, 480);
@@ -75,16 +85,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(680, 505);
+            this.ClientSize = new System.Drawing.Size(480, 480);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.mapView1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.KeyPreview = true;
-            this.MaximizeBox = false;
             this.Name = "MainWindow";
-            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Puzzle Game";
             this.Load += new System.EventHandler(this.MainWindow_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainWindow_KeyDown);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -99,6 +107,7 @@
         private System.Windows.Forms.ToolStripButton openButton;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         public MapView mapView1;
+        private System.Windows.Forms.ToolStripLabel StatusLabel;
 
     }
 }

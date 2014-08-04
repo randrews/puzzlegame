@@ -8,13 +8,13 @@ namespace PuzzleGame
 {
     public partial class GameController
     {
-        public TmxMap Map { get; set; }
-        public MainWindow Window { get; set; }
+        public TmxMap Map { get; private set; }
+        public MainWindow Window { get; private set; }
 
         /// <summary>
         /// Maps Type name to rectangle in Image, so we can look up tiles that aren't on the map at the start, like effects
         /// </summary>
-        public Dictionary<string, Rectangle> Tileset { get; set; }
+        public Dictionary<string, Rectangle> Tileset { get; private set; }
 
         /// <summary>
         /// The image for the tileset
@@ -32,6 +32,8 @@ namespace PuzzleGame
                 return _image;
             } 
         }
+
+        public Size TileSize { get; private set; }
 
         /// <summary>
         /// 2D array of all the items in their current locations
@@ -79,6 +81,7 @@ namespace PuzzleGame
         /// Reads a layer of the map, and returns the rectangles associated with each tile.
         /// This is the rectangles for the tile regardless of that tile's Type attribute;
         /// whatever tile Tiled shows, that's the rect you get.
+        /// TODO: Assumes 20x20 map
         /// </summary>
         /// <param name="layerName"></param>
         /// <returns></returns>
@@ -97,7 +100,7 @@ namespace PuzzleGame
 
         /// <summary>
         /// Take a tile Gid and return its rectangle.
-        /// TODO: This assumes only one tileset, and 24x24 tiles.
+        /// TODO: This assumes only one tileset
         /// </summary>
         /// <param name="gid"></param>
         /// <returns></returns>
@@ -105,11 +108,11 @@ namespace PuzzleGame
         {
             if (gid == 0) return null;
             gid -= 1;
-            int width = Image.Width / 24;
+            int width = Image.Width / TileSize.Width;
             int x = gid%width;
             int y = gid/width;
 
-            return new Rectangle(x*24, y*24, 24, 24);
+            return new Rectangle(x*TileSize.Width, y*TileSize.Height, TileSize.Width, TileSize.Height);
         }
 
         /// <summary>

@@ -70,5 +70,10 @@ namespace PuzzleGame
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
+
+        private void MainWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
     }
 }
