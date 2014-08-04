@@ -35,6 +35,7 @@ namespace PuzzleGame
             {
                 var map = new TiledSharp.TmxMap(openFileDialog.FileName);
                 Controller = new GameController(this, map);
+                mapView1.Controller = Controller;
                 mapView1.Refresh();
             }
             catch (Exception exc)
@@ -43,30 +44,31 @@ namespace PuzzleGame
             }
         }
 
-        private void MainWindow_KeyDown(object sender, KeyEventArgs e)
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (Controller == null) return;
+            if (Controller != null)
+            {
+                if (keyData == Keys.Up)
+                {
+                    Controller.MoveCommand(Direction.Up);
+                }
+                else if (keyData == Keys.Down)
+                {
+                    Controller.MoveCommand(Direction.Down);
+                }
+                else if (keyData == Keys.Left)
+                {
+                    Controller.MoveCommand(Direction.Left);
+                }
+                else if (keyData == Keys.Right)
+                {
+                    Controller.MoveCommand(Direction.Right);
+                }
 
-            if (e.KeyCode == Keys.Up)
-            {
-                Controller.MoveCommand(Direction.Up);
-                e.SuppressKeyPress = true;
+                mapView1.Refresh();
+                return true;
             }
-            else if (e.KeyCode == Keys.Down)
-            {
-                Controller.MoveCommand(Direction.Down);
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyCode == Keys.Left)
-            {
-                Controller.MoveCommand(Direction.Left);
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyCode == Keys.Right)
-            {
-                Controller.MoveCommand(Direction.Right);
-                e.SuppressKeyPress = true;
-            }
+            return base.ProcessCmdKey(ref msg, keyData);
         }
     }
 }

@@ -47,7 +47,6 @@ namespace PuzzleGame
         {
             Window = window;
             Map = map;
-            Window.mapView1.Controller = this;
             Tileset = LoadTileset();
             SetupAnimationFrames();
             Items = LoadItems();
@@ -119,7 +118,31 @@ namespace PuzzleGame
         /// <param name="direction">The direction we'll be moving</param>
         internal void MoveCommand(Direction direction)
         {
+            if (PlayerLocation == null) return;
+            var newLocation = new Point(((Point)PlayerLocation).X, ((Point)PlayerLocation).Y);
 
+            switch (direction)
+            {
+                case Direction.Up:
+                    newLocation.Y--;
+                    break;
+                case Direction.Down:
+                    newLocation.Y++;
+                    break;
+                case Direction.Left:
+                    newLocation.X--;
+                    break;
+                case Direction.Right:
+                    newLocation.X++;
+                    break;
+            }
+
+            if (newLocation.X >= 0 && newLocation.X < Walls.GetLength(0) && // X in bounds
+                newLocation.Y >= 0 && newLocation.Y < Walls.GetLength(1) && // Y in bounds
+                Walls[newLocation.X, newLocation.Y] == null) // No wall there
+            {
+                PlayerLocation = newLocation;
+            }
         }
 
         /// <summary>
