@@ -32,9 +32,12 @@ namespace PuzzleGame
             if (Controller == null) return;
 
             // The total size of the map if we showed all of it
-            var mapSize = new Size(Controller.TileSize.Width * 20, Controller.TileSize.Height * 20);
+            var mapSize = new Size(Controller.TileSize.Width * Controller.MapSize.Width, Controller.TileSize.Height * Controller.MapSize.Height);
+            
+            // The pixel coordinate (in the map pixel rectangle) of the center of the player tile
             var playerCenter = new Point((int)((Controller.PlayerLocation.X + 0.5) * Controller.TileSize.Width),
                 (int)((Controller.PlayerLocation.Y + 0.5) * Controller.TileSize.Height));
+
             // First, figure out the translation
             // If the control is larger than the map, center the map
             if (Width > mapSize.Width)
@@ -58,7 +61,7 @@ namespace PuzzleGame
 
         private void DrawPlayer(Graphics g)
         {
-            if (Controller.Player.Rectangle != null && Controller.PlayerLocation != null)
+            if (Controller.Player.Rectangle != null)
             {
                 Point p = (Point)Controller.PlayerLocation;
                 int w = Controller.TileSize.Width;

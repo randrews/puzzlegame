@@ -33,7 +33,15 @@ namespace PuzzleGame
             } 
         }
 
+        /// <summary>
+        /// Size of each tile in pixels
+        /// </summary>
         public Size TileSize { get; private set; }
+        
+        /// <summary>
+        /// Size of the map in tiles
+        /// </summary>
+        public Size MapSize { get; set; }
 
         /// <summary>
         /// 2D array of all the items in their current locations
@@ -51,6 +59,7 @@ namespace PuzzleGame
             Map = map;
             Tileset = LoadTileset();
             SetupAnimationFrames();
+            MapSize = ReadMapSize();
             Items = LoadItems();
             Walls = LoadWalls();
             Floors = LoadFloors();
@@ -81,13 +90,12 @@ namespace PuzzleGame
         /// Reads a layer of the map, and returns the rectangles associated with each tile.
         /// This is the rectangles for the tile regardless of that tile's Type attribute;
         /// whatever tile Tiled shows, that's the rect you get.
-        /// TODO: Assumes 20x20 map
         /// </summary>
         /// <param name="layerName"></param>
         /// <returns></returns>
         private Rectangle?[,] LayerToRectangles(string layerName)
         {
-            var cells = new Rectangle?[20,20];
+            var cells = new Rectangle?[MapSize.Width, MapSize.Height];
             var layer = Map.Layers[layerName];
 
             foreach (var tile in layer.Tiles)

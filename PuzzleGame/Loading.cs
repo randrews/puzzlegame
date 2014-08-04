@@ -67,12 +67,11 @@ namespace PuzzleGame
         }
         /// <summary>
         /// Load the Items layer from the map into the 2d Items array
-        /// TODO: This assumes 20x20 map
         /// </summary>
         /// <returns></returns>
         private Item[,] LoadItems()
         {
-            var cells = new Item[20, 20];
+            var cells = new Item[MapSize.Width, MapSize.Height];
             var layer = Map.Layers["Items"];
             var tset = Map.Tilesets.First();
             var tiles = tset.Tiles.ToDictionary(t => t.Id + tset.FirstGid);
@@ -148,6 +147,11 @@ namespace PuzzleGame
             }
 
             return dict;
+        }
+
+        private Size ReadMapSize()
+        {
+            return new Size(Map.Width, Map.Height);
         }
     }
 }

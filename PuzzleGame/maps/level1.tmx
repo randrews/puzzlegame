@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="48" tileheight="48">
+<map version="1.0" orientation="orthogonal" width="12" height="12" tilewidth="48" tileheight="48">
  <tileset firstgid="1" name="Tiles" tilewidth="48" tileheight="48">
   <image source="../art/tiles.png" width="768" height="192"/>
   <tile id="17">
@@ -96,19 +96,19 @@
    </properties>
   </tile>
  </tileset>
- <layer name="Floor" width="20" height="20">
+ <layer name="Floor" width="12" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFtAKCOPBwMg+XGeSaPWre4DKPGLPJBYPdvFFAGAAAf2IHLQ==
+   eJxjYEAAQRwYF6CFelxqRjHxYYUL0EI9ACKQBy0=
   </data>
  </layer>
- <layer name="Walls" width="20" height="20">
+ <layer name="Walls" width="12" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFtAKMODAl5hEjRk/zcPmREYc8OW7CJU+qeYT8OxjNw6UWnxpCcUBuWhyM6Q9dLzXz2yggDAC1sAA5
+   eJxjYEAARhwYF8AmR6l6XG5gxCOPDzCisdH59FaPrpdYP2LzKy3Cn5D70NUDAEGwADk=
   </data>
  </layer>
- <layer name="Items" width="20" height="20">
+ <layer name="Items" width="12" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFQxFIQTGlQILK5iEDYTL1wdwihENekkzzaAXkobQYBfaJ4xAXIdM8GBAlUx8uQO2wRDZPgYrmjgL6AADg7QKM
+   eJxjYKAOkIJiQkCCRPXIQJiA3UI45CVxqCcXyENpMTzmiePQK0LAflES3UKqX5DVK5BoFzYAANISAow=
   </data>
  </layer>
 </map>
