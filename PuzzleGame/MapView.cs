@@ -31,6 +31,25 @@ namespace PuzzleGame
             base.OnPaint(e);
             if (Controller == null) return;
 
+            // The total size of the map if we showed all of it
+            var mapSize = new Size(Controller.TileSize.Width * 20, Controller.TileSize.Height * 20);
+            var playerCenter = new Point((int)((Controller.PlayerLocation.X + 0.5) * Controller.TileSize.Width),
+                (int)((Controller.PlayerLocation.Y + 0.5) * Controller.TileSize.Height));
+            // First, figure out the translation
+            // If the control is larger than the map, center the map
+            if (Width > mapSize.Width)
+                e.Graphics.TranslateTransform(Width / 2 - mapSize.Width / 2, 0);
+
+            if (Height > mapSize.Height)
+                e.Graphics.TranslateTransform(0, Height / 2 - mapSize.Height / 2);
+
+            // If the control is smaller than the map, then center it on the player
+            if (Width < mapSize.Width)
+                e.Graphics.TranslateTransform(Width / 2 - playerCenter.X, 0);
+
+            if (Height < mapSize.Height)
+                e.Graphics.TranslateTransform(0, Height / 2 - playerCenter.Y);
+
             DrawRectangles(Controller.Floors, e.Graphics);
             DrawRectangles(Controller.Walls, e.Graphics);
             DrawRectangles(Controller.GetItemRectangles(), e.Graphics);

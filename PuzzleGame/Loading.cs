@@ -76,6 +76,7 @@ namespace PuzzleGame
             var layer = Map.Layers["Items"];
             var tset = Map.Tilesets.First();
             var tiles = tset.Tiles.ToDictionary(t => t.Id + tset.FirstGid);
+            bool playerSet = false;
 
             var rand = new Random();
 
@@ -103,9 +104,10 @@ namespace PuzzleGame
                         }
                             break;
                         case "Start":
-                            if (PlayerLocation != null) throw new ArgumentException("Map contains multiple start locations");
+                            if (playerSet) throw new ArgumentException("Map contains multiple start locations");
                             PlayerLocation = new Point(tile.X, tile.Y);
                             Player = new Player(PlayerAnimationFrames);
+                            playerSet = true;
                             break;
                         default:
                             cells[tile.X, tile.Y] = new Item { Type = type, Rectangle = rect };

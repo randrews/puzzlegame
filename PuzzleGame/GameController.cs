@@ -42,7 +42,7 @@ namespace PuzzleGame
         public Rectangle?[,] Walls { get; private set; }
         public Rectangle?[,] Floors { get; private set; }
 
-        public Point? PlayerLocation { get; set; }
+        public Point PlayerLocation { get; set; }
         public Player Player { get; private set; }
 
         public GameController(MainWindow window, TmxMap map)
@@ -121,8 +121,7 @@ namespace PuzzleGame
         /// <param name="direction">The direction we'll be moving</param>
         internal void MoveCommand(Direction direction)
         {
-            if (PlayerLocation == null) return;
-            var newLocation = new Point(((Point)PlayerLocation).X, ((Point)PlayerLocation).Y);
+            var newLocation = new Point(PlayerLocation.X, PlayerLocation.Y);
 
             switch (direction)
             {
