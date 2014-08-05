@@ -80,11 +80,6 @@
     <property name="Type" value="Start"/>
    </properties>
   </tile>
-  <tile id="31">
-   <properties>
-    <property name="Type" value="Exit"/>
-   </properties>
-  </tile>
   <tile id="32">
    <properties>
     <property name="Type" value="Player1"/>
@@ -100,6 +95,16 @@
     <property name="Type" value="Scroll"/>
    </properties>
   </tile>
+  <tile id="35">
+   <properties>
+    <property name="Type" value="Exit"/>
+   </properties>
+  </tile>
+  <tile id="36">
+   <properties>
+    <property name="Type" value="ExitOpen"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="Floor" width="13" height="13">
   <data encoding="base64" compression="zlib">
@@ -113,7 +118,7 @@
  </layer>
  <layer name="Items" width="13" height="13">
   <data encoding="base64" compression="zlib">
-   eJxjYKAekIJiYoAEGXrQgTABeSE8cpJofGzuUCZgPjY98lBaDI8aQgCbHnE86kUImCdKov3Y3KFAhh5qAQCQNQKv
+   eJxjYKAekIJiYoAEGXrQgTABeSE8cpJofGzuUCZgPjY98lBaDI8aQgCbHnE86kUImCdKov3Y3KFChh5qAQCSJQKz
   </data>
  </layer>
 </map>
