@@ -52,8 +52,7 @@ namespace PuzzleGame
 
             if (mapView1.ShowingMessage)
             {
-                if (keyData == Keys.Enter || keyData == Keys.Escape || keyData == Keys.Space)
-                    mapView1.Message = null;
+                mapView1.Message = null;
             }
             else
             {

@@ -75,7 +75,8 @@ namespace PuzzleGame
             var layer = Map.Layers["Items"];
             var tset = Map.Tilesets.First();
             var tiles = tset.Tiles.ToDictionary(t => t.Id + tset.FirstGid);
-            bool playerSet = false;
+            var playerSet = false;
+            var exitSet = false;
             Color color;
 
             var rand = new Random();
@@ -117,12 +118,21 @@ namespace PuzzleGame
                             msg = msg.Replace('~', '\n');
                             cells[tile.X, tile.Y] = new Scroll(msg, (Rectangle) rect);
                             break;
+                        case "Exit":
+                            if(exitSet) throw new ArgumentException("Map contains multiple exits");
+                            Exit = new Exit((Rectangle) rect, Tileset["ExitOpen"]);
+                            cells[tile.X, tile.Y] = Exit;
+                            exitSet = true;
+                            break;
                         default:
                             cells[tile.X, tile.Y] = new Item { Type = type, Rectangle = rect };
                             break;
                     }
                 }
             }
+
+            if (!playerSet) throw new ArgumentException("Map contains no start location");
+            if (!exitSet) throw new ArgumentException("Map contains no exit");
 
             return cells;
         }

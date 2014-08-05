@@ -53,6 +53,7 @@ namespace PuzzleGame
 
         public Point PlayerLocation { get; set; }
         public Player Player { get; private set; }
+        public Exit Exit { get; private set; }
 
         public GameController(MainWindow window, TmxMap map)
         {
@@ -179,6 +180,12 @@ namespace PuzzleGame
 
             // Update the status label
             Window.UpdateStatusLabel(GetStatusLabel());
+
+            // If there's no gold left, open the exit
+            if (!Items.OfType<Gold>().Any())
+            {
+                Exit.Open();
+            }
         }
 
         /// <summary>
