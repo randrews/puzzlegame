@@ -111,6 +111,12 @@ namespace PuzzleGame
                             if( ! Enum.TryParse(tilesetTile.Properties["Color"], true, out color)) throw new ArgumentException("Door has unrecognized color " + tilesetTile.Properties["Color"]);
                             cells[tile.X, tile.Y] = new Door(color, (Rectangle) rect);
                             break;
+                        case "Scroll":
+                            if( ! Map.Properties.ContainsKey("ScrollMessage")) throw new ArgumentException("Map contains scrolls but no ScrollMessage");
+                            var msg = Map.Properties["ScrollMessage"];
+                            msg = msg.Replace('~', '\n');
+                            cells[tile.X, tile.Y] = new Scroll(msg, (Rectangle) rect);
+                            break;
                         default:
                             cells[tile.X, tile.Y] = new Item { Type = type, Rectangle = rect };
                             break;

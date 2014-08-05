@@ -41,39 +41,51 @@ namespace PuzzleGame
             catch (Exception exc)
             {
                 Console.WriteLine(exc);
+                MessageBox.Show(exc.Message, "Error loading map",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (Controller != null)
-            {
-                if (keyData == Keys.Up)
-                {
-                    Controller.MoveCommand(Direction.Up);
-                }
-                else if (keyData == Keys.Down)
-                {
-                    Controller.MoveCommand(Direction.Down);
-                }
-                else if (keyData == Keys.Left)
-                {
-                    Controller.MoveCommand(Direction.Left);
-                }
-                else if (keyData == Keys.Right)
-                {
-                    Controller.MoveCommand(Direction.Right);
-                }
+            if (Controller == null) return base.ProcessCmdKey(ref msg, keyData);
 
-                mapView1.Refresh();
-                return true;
+            if (mapView1.ShowingMessage)
+            {
+                if (keyData == Keys.Enter || keyData == Keys.Escape || keyData == Keys.Space)
+                    mapView1.Message = null;
             }
-            return base.ProcessCmdKey(ref msg, keyData);
+            else
+            {
+                switch (keyData)
+                {
+                    case Keys.Up:
+                        Controller.MoveCommand(Direction.Up);
+                        break;
+                    case Keys.Down:
+                        Controller.MoveCommand(Direction.Down);
+                        break;
+                    case Keys.Left:
+                        Controller.MoveCommand(Direction.Left);
+                        break;
+                    case Keys.Right:
+                        Controller.MoveCommand(Direction.Right);
+                        break;
+                }                
+            }
+
+            mapView1.Refresh();
+            return true;
         }
 
         internal void UpdateStatusLabel(string p)
         {
             StatusLabel.Text = p;
+        }
+
+        public void ShowMessage(string message)
+        {
+            mapView1.Message = message;
         }
     }
 }

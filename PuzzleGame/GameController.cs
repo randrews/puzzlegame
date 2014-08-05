@@ -162,7 +162,7 @@ namespace PuzzleGame
                     if (!item.Solid) // There's an item but it's not solid. Move on top of it, and tell it so
                     {
                         PlayerLocation = newLocation;
-                        item.PlayerEnter(Player);
+                        item.PlayerEnter(Player, this);
                     }
                     else // It's solid, so bump into it and see what it does
                     {
@@ -221,6 +221,11 @@ namespace PuzzleGame
                 keys.Add(string.Format("yellow ({0})", Player.Keys[Color.Yellow]));
 
             return string.Format("Keys: {0}", string.Join(", ", keys));
+        }
+
+        public void ShowMessage(string message)
+        {
+            Window.ShowMessage(message);
         }
     }
 }

@@ -41,7 +41,8 @@ namespace PuzzleGame
         /// Called when the player stands on top of a non-solid object
         /// </summary>
         /// <param name="player"></param>
-        public virtual void PlayerEnter(Player player) { }
+        /// <param name="controller"></param>
+        public virtual void PlayerEnter(Player player, GameController controller) { }
 
         /// <summary>
         /// Called for a solid, non-pushable object when the player tries to move into it
@@ -82,9 +83,8 @@ namespace PuzzleGame
             Solid = false;
         }
 
-        public override void PlayerEnter(Player player)
+        public override void PlayerEnter(Player player, GameController controller)
         {
-            base.PlayerEnter(player);
             Dead = true;
         }
     }
@@ -100,9 +100,8 @@ namespace PuzzleGame
             Solid = false;
         }
 
-        public override void PlayerEnter(Player player)
+        public override void PlayerEnter(Player player, GameController controller)
         {
-            base.PlayerEnter(player);
             player.Keys[Color]++;
             Dead = true;
         }
@@ -125,6 +124,23 @@ namespace PuzzleGame
             if (player.Keys[Color] == 0) return;
             player.Keys[Color]--;
             Dead = true;
+        }
+    }
+
+    public class Scroll : Item
+    {
+        private string _message;
+
+        public Scroll(string message, Rectangle rectangle)
+        {
+            Rectangle = rectangle;
+            _message = message;
+            Solid = false;
+        }
+
+        public override void PlayerEnter(Player player, GameController controller)
+        {
+            controller.ShowMessage(_message);
         }
     }
 }

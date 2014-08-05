@@ -8,6 +8,19 @@ namespace PuzzleGame
     {
         private GameController _controller;
         private Image _image;
+        public bool ShowingMessage { get; private set; }
+        private string _message;
+
+        public string Message
+        {
+            set
+            {
+                _message = value;
+                ShowingMessage = (_message != null);
+            }
+            private get { return _message; }
+        }
+
         public GameController Controller
         {
             get
@@ -24,6 +37,7 @@ namespace PuzzleGame
         public MapView()
         {
             InitializeComponent();
+            ShowingMessage = false;
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -57,6 +71,28 @@ namespace PuzzleGame
             DrawRectangles(Controller.Walls, e.Graphics);
             DrawRectangles(Controller.GetItemRectangles(), e.Graphics);
             DrawPlayer(e.Graphics);
+
+            if (ShowingMessage) DisplayMessageBox(e.Graphics);
+        }
+
+        private void DisplayMessageBox(Graphics g)
+        {
+            g.ResetTransform(); // This is all in normal, not map, coordinates
+
+            var brush = new SolidBrush(System.Drawing.Color.Linen);
+            var pen = new Pen(System.Drawing.Color.DimGray);
+            var textBrush = new SolidBrush(System.Drawing.Color.DimGray);
+            var rect = MessageBoxRectangle();
+            g.FillRectangle(brush, rect);
+            g.DrawRectangle(pen, rect);
+
+            var textSize = TextRenderer.MeasureText(Message, Font);
+            g.DrawString(Message, Font, textBrush, Width / 2 - textSize.Width / 2, Height / 2 - textSize.Height / 2);
+        }
+
+        private Rectangle MessageBoxRectangle()
+        {
+            return new Rectangle(Width/2 - 100, Height/2 - 75, 200, 150);
         }
 
         private void DrawPlayer(Graphics g)
@@ -91,6 +127,7 @@ namespace PuzzleGame
 
         private void animationTimer_Tick(object sender, EventArgs e)
         {
+            if (ShowingMessage) return;
             if (Controller != null) Controller.AnimationTick();
             Refresh();
         }
