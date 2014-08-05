@@ -4,7 +4,7 @@
   <image source="../art/tiles.png" width="768" height="192"/>
   <tile id="17">
    <properties>
-    <property name="Color" value="Red"/>
+    <property name="Color" value="Blue"/>
     <property name="Type" value="Door"/>
    </properties>
   </tile>
@@ -95,6 +95,11 @@
     <property name="Type" value="Player2"/>
    </properties>
   </tile>
+  <tile id="34">
+   <properties>
+    <property name="Type" value="Scroll"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="Floor" width="13" height="13">
   <data encoding="base64" compression="zlib">
@@ -108,7 +113,7 @@
  </layer>
  <layer name="Items" width="13" height="13">
   <data encoding="base64" compression="zlib">
-   eJxjYKAekIJiYoAEGXrQgTABeSE8cpJofHLcgU2PPJQWo7K54njUixAwT5RE+7G5Q4EMPdQCAFqdAow=
+   eJxjYKAekIJiYoAEGXrQgTABeSE8cpJofGzuUCZgPjY98lBaDI8aQgCbHnE86kUImCdKov3Y3KFAhh5qAQCQNQKv
   </data>
  </layer>
 </map>

@@ -76,6 +76,7 @@ namespace PuzzleGame
             var tset = Map.Tilesets.First();
             var tiles = tset.Tiles.ToDictionary(t => t.Id + tset.FirstGid);
             bool playerSet = false;
+            Color color;
 
             var rand = new Random();
 
@@ -95,18 +96,20 @@ namespace PuzzleGame
                             cells[tile.X, tile.Y] = new Gold(GoldAnimationFrames, rand.Next(30));
                             break;
                         case "Key":
-                        {
                             if( ! tilesetTile.Properties.ContainsKey("Color")) throw new ArgumentException("Key doesn't have a Color property");
-                            Color color;
                             if( ! Enum.TryParse(tilesetTile.Properties["Color"], true, out color)) throw new ArgumentException("Key has unrecognized color " + tilesetTile.Properties["Color"]);
                             cells[tile.X, tile.Y] = new Key(color, (Rectangle) rect);
-                        }
                             break;
                         case "Start":
                             if (playerSet) throw new ArgumentException("Map contains multiple start locations");
                             PlayerLocation = new Point(tile.X, tile.Y);
                             Player = new Player(PlayerAnimationFrames);
                             playerSet = true;
+                            break;
+                        case "Door":
+                            if( ! tilesetTile.Properties.ContainsKey("Color")) throw new ArgumentException("Door doesn't have a Color property");
+                            if( ! Enum.TryParse(tilesetTile.Properties["Color"], true, out color)) throw new ArgumentException("Door has unrecognized color " + tilesetTile.Properties["Color"]);
+                            cells[tile.X, tile.Y] = new Door(color, (Rectangle) rect);
                             break;
                         default:
                             cells[tile.X, tile.Y] = new Item { Type = type, Rectangle = rect };

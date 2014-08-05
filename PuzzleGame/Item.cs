@@ -43,6 +43,11 @@ namespace PuzzleGame
         /// <param name="player"></param>
         public virtual void PlayerEnter(Player player) { }
 
+        /// <summary>
+        /// Called for a solid, non-pushable object when the player tries to move into it
+        /// </summary>
+        public virtual void Bump(Player player) { }
+
         public Item()
         {
             Dead = false;
@@ -99,6 +104,26 @@ namespace PuzzleGame
         {
             base.PlayerEnter(player);
             player.Keys[Color]++;
+            Dead = true;
+        }
+    }
+
+    public class Door : Item
+    {
+        public Color Color { get; private set; }
+
+        public Door(Color color, Rectangle rectangle)
+        {
+            Color = color;
+            Rectangle = rectangle;
+            Solid = true;
+        }
+
+        public override void Bump(Player player)
+        {
+            base.Bump(player);
+            if (player.Keys[Color] == 0) return;
+            player.Keys[Color]--;
             Dead = true;
         }
     }

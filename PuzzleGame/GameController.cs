@@ -164,6 +164,10 @@ namespace PuzzleGame
                         PlayerLocation = newLocation;
                         item.PlayerEnter(Player);
                     }
+                    else // It's solid, so bump into it and see what it does
+                    {
+                        item.Bump(Player);
+                    }
                 }
             }
 
