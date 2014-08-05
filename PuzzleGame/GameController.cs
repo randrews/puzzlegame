@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 using TiledSharp;
 
 namespace PuzzleGame
@@ -64,6 +65,7 @@ namespace PuzzleGame
             Walls = LoadWalls();
             Floors = LoadFloors();
             if(PlayerLocation == null) throw new ArgumentException("Map doesn't contain a start location");
+            Window.UpdateStatusLabel(GetStatusLabel());
         }
 
         /// <summary>
@@ -170,6 +172,9 @@ namespace PuzzleGame
                 for (int x = 0; x < Items.GetLength(0); x++)
                     if (Items[x, y] != null && Items[x, y].Dead)
                         Items[x, y] = null;
+
+            // Update the status label
+            Window.UpdateStatusLabel(GetStatusLabel());
         }
 
         /// <summary>
@@ -184,6 +189,34 @@ namespace PuzzleGame
             }
 
             if(Player != null) Player.Animate();
+        }
+
+        public string GetStatusLabel()
+        {
+            if (!Player.HasAnyKeys()) return "";
+            var keys = new List<string>();
+
+            if (Player.Keys[Color.Blue] == 1)
+                keys.Add("blue");
+            else if (Player.Keys[Color.Blue] > 1)
+                keys.Add(string.Format("blue ({0})", Player.Keys[Color.Blue]));
+
+            if (Player.Keys[Color.Green] == 1)
+                keys.Add("green");
+            else if (Player.Keys[Color.Green] > 1)
+                keys.Add(string.Format("green ({0})", Player.Keys[Color.Green]));
+
+            if (Player.Keys[Color.Red] == 1)
+                keys.Add("red");
+            else if (Player.Keys[Color.Red] > 1)
+                keys.Add(string.Format("red ({0})", Player.Keys[Color.Red]));
+
+            if (Player.Keys[Color.Yellow] == 1)
+                keys.Add("yellow");
+            else if (Player.Keys[Color.Yellow] > 1)
+                keys.Add(string.Format("yellow ({0})", Player.Keys[Color.Yellow]));
+
+            return string.Format("Keys: {0}", string.Join(", ", keys));
         }
     }
 }

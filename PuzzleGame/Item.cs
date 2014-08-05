@@ -62,6 +62,11 @@ namespace PuzzleGame
             Keys = new Dictionary<Color, int>();
             Keys[Color.Red] = Keys[Color.Blue] = Keys[Color.Green] = Keys[Color.Yellow] = 0;
         }
+
+        public bool HasAnyKeys()
+        {
+            return Keys.Any(pair => pair.Value > 0);
+        }
     }
 
     public class Gold : AnimatableItem

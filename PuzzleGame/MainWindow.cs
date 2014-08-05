@@ -71,9 +71,9 @@ namespace PuzzleGame
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        private void MainWindow_KeyDown(object sender, KeyEventArgs e)
+        internal void UpdateStatusLabel(string p)
         {
-
+            StatusLabel.Text = p;
         }
     }
 }
