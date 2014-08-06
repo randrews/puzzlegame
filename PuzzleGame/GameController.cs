@@ -132,27 +132,9 @@ namespace PuzzleGame
         /// <param name="direction">The direction we'll be moving</param>
         internal void MoveCommand(Direction direction)
         {
-            var newLocation = new Point(PlayerLocation.X, PlayerLocation.Y);
+            var newLocation = TranslateLocation(PlayerLocation, direction);
 
-            switch (direction)
-            {
-                case Direction.Up:
-                    newLocation.Y--;
-                    break;
-                case Direction.Down:
-                    newLocation.Y++;
-                    break;
-                case Direction.Left:
-                    newLocation.X--;
-                    break;
-                case Direction.Right:
-                    newLocation.X++;
-                    break;
-            }
-
-            if (newLocation.X >= 0 && newLocation.X < Walls.GetLength(0) && // X in bounds
-                newLocation.Y >= 0 && newLocation.Y < Walls.GetLength(1) && // Y in bounds
-                Walls[newLocation.X, newLocation.Y] == null) // No wall there
+            if (InBounds(newLocation) && Walls[newLocation.X, newLocation.Y] == null) // No wall there
             {
                 // First, is there an item there? If not, we're good
                 if (Items[newLocation.X, newLocation.Y] == null)
@@ -164,6 +146,13 @@ namespace PuzzleGame
                     {
                         PlayerLocation = newLocation;
                         item.PlayerEnter(Player, this);
+                    }
+                    else if (item.Pushable) // Try pushing the object
+                    {
+                        if(TryPush(newLocation, direction, true)) // This returns true if it can be pushed, with the side effect of actually pushing it
+                        {
+                            PlayerLocation = newLocation;
+                        }
                     }
                     else // It's solid, so bump into it and see what it does
                     {
@@ -186,6 +175,76 @@ namespace PuzzleGame
             {
                 Exit.Open();
             }
+        }
+
+        private bool InBounds(Point p)
+        {
+            return p.X >= 0 && p.X < MapSize.Width && // X in bounds
+                   p.Y >= 0 && p.Y < MapSize.Height;
+        }
+
+        private Point TranslateLocation(Point p, Direction direction)
+        {
+            var newLocation = new Point(p.X, p.Y);
+
+            switch (direction)
+            {
+                case Direction.Up:
+                    newLocation.Y--;
+                    break;
+                case Direction.Down:
+                    newLocation.Y++;
+                    break;
+                case Direction.Left:
+                    newLocation.X--;
+                    break;
+                case Direction.Right:
+                    newLocation.X++;
+                    break;
+            }
+
+            return newLocation;
+        }
+
+        /// <summary>
+        /// Try to push an item in a direction
+        /// </summary>
+        /// <param name="location">Location of the item being pushed</param>
+        /// <param name="direction">Direction it's being pushed</param>
+        /// <param name="byPlayer">Whether the player is doing the pushing, or something else</param>
+        /// <returns></returns>
+        private bool TryPush(Point location, Direction direction, bool byPlayer)
+        {
+            var newLocation = TranslateLocation(location, direction);
+            if (! InBounds(newLocation)) return false; // First, are we trying to push it off the map?
+            if (Walls[newLocation.X, newLocation.Y] != null) return false; // Trying to push into a wall, so no.
+
+            var pushed = Items[location.X, location.Y]; // The thing we're pushing
+            var pushedInto = Items[newLocation.X, newLocation.Y]; // Contents of the space we're pushing it into
+
+            // Wait, there's no item being pushed? That's the caller's problem
+            if(pushed == null) throw new ArgumentException("Trying to push an empty space");
+
+            // This thing can't be pushed.
+            if (!pushed.Solid || !pushed.Pushable) return false;
+
+            // Trying to push into an empty space, that's totally cool
+            if (pushedInto == null)
+            {
+                Items[newLocation.X, newLocation.Y] = pushed;
+                Items[location.X, location.Y] = null;
+                return true;
+            }
+
+            // Otherwise, there's something there:
+            if (TryPush(newLocation, direction, false)) // Try to push it. If this returns true, then newLocation must be empty...
+            {
+                Items[newLocation.X, newLocation.Y] = pushed;
+                Items[location.X, location.Y] = null;
+                return true;                    
+            }
+
+            return false;
         }
 
         /// <summary>

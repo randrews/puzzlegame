@@ -118,6 +118,9 @@ namespace PuzzleGame
                             msg = msg.Replace('~', '\n');
                             cells[tile.X, tile.Y] = new Scroll(msg, (Rectangle) rect);
                             break;
+                        case "Crate":
+                            cells[tile.X, tile.Y] = new Crate((Rectangle)rect);
+                            break;
                         case "Exit":
                             if(exitSet) throw new ArgumentException("Map contains multiple exits");
                             Exit = new Exit((Rectangle) rect, Tileset["ExitOpen"]);
