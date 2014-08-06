@@ -231,12 +231,17 @@ namespace PuzzleGame
             // Trying to push into an empty space, that's totally cool
             if (pushedInto == null)
             {
+                if (pushed.Heavy && !byPlayer) return false; // Heavy things can only be pushed by the player directly, not other things
+
                 Items[newLocation.X, newLocation.Y] = pushed;
                 Items[location.X, location.Y] = null;
                 return true;
             }
 
-            // Otherwise, there's something there:
+            // Otherwise, there's something there.
+
+            if (pushed.Heavy) return false; // Heavy things can only be pushed into empty spaces
+
             if (TryPush(newLocation, direction, false)) // Try to push it. If this returns true, then newLocation must be empty...
             {
                 Items[newLocation.X, newLocation.Y] = pushed;

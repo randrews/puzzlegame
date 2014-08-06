@@ -3,17 +3,17 @@
  <tileset firstgid="1" source="Tiles.tsx"/>
  <layer name="Floor" width="19" height="13">
   <data encoding="base64" compression="zlib">
-   eJwTZGBgEBzFo3gUDzsMAM09EGg=
+   eJwTZGBgEBzFo3gIYIZB4IahhAG5DRBX
   </data>
  </layer>
  <layer name="Walls" width="19" height="13">
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYKQixgewyeMSI8csXOqIVUsNsxixsNFpcswixl3kxBUl8YhLHS6z8aklBAjZSQqgtrtIjUdcfqFmPgRhALokAGE=
+   eJxjZGBgYKQixgewyeMSI8csXOqIVUsNsxixsNFpcswixl3kxBUl8YhLHTazCZlFCBCykxRAbXeRGo+4/ELNfAjCALfUAF8=
   </data>
  </layer>
  <layer name="Items" width="19" height="13">
   <data encoding="base64" compression="zlib">
-   eJxjYBjcQB6JLYdHnRwRapDViiGpFUKTk4LS4iSYRw130RsIU8EMdH/h86cUAXNg4Y6NjwxUcIiLINmDHu4gWoIMd+FyH6WAHukBAM5hBEg=
+   eJxjYBjcQB6JLYdHnRwRapDViiGpFUKTk4LS4iSYRw134QNqBPjkAGEqmIHuL1z+BLlXioA5sHDHxkcGKjjERaA0ujkwWoIMd+FyH6WAWubgAwDLYATg
   </data>
  </layer>
 </map>

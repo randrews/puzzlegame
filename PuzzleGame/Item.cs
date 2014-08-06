@@ -175,4 +175,15 @@ namespace PuzzleGame
             Heavy = false;
         }
     }
+
+    public class Boulder : Item
+    {
+        public Boulder(Rectangle rectangle)
+        {
+            Rectangle = rectangle;
+            Pushable = true;
+            Solid = true;
+            Heavy = true;
+        }
+    }
 }

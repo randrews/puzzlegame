@@ -104,4 +104,9 @@
    <property name="Type" value="ExitOpen"/>
   </properties>
  </tile>
+ <tile id="37">
+  <properties>
+   <property name="Type" value="Boulder"/>
+  </properties>
+ </tile>
 </tileset>

@@ -121,6 +121,9 @@ namespace PuzzleGame
                         case "Crate":
                             cells[tile.X, tile.Y] = new Crate((Rectangle)rect);
                             break;
+                        case "Boulder":
+                            cells[tile.X, tile.Y] = new Boulder((Rectangle)rect);
+                            break;
                         case "Exit":
                             if(exitSet) throw new ArgumentException("Map contains multiple exits");
                             Exit = new Exit((Rectangle) rect, Tileset["ExitOpen"]);
