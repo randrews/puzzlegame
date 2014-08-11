@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="17" height="17" tilewidth="48" tileheight="48">
+ <tileset firstgid="1" source="Tiles.tsx"/>
+ <layer name="Floor" width="17" height="17">
+  <data encoding="base64" compression="zlib">
+   eJwTZGBgEBzFo3gUj+IBwgCCDRMy
+  </data>
+ </layer>
+ <layer name="Walls" width="17" height="17">
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYKQCpgTQywxi5GnlDvSwwhd2+MRx2UkPM4gNG3Q9g9Ev6OKUxAspgN7plB75llIMAM+AAF8=
+  </data>
+ </layer>
+ <layer name="Items" width="17" height="17">
+  <data encoding="base64" compression="zlib">
+   eJxjYBhcQH6gHUAAqFPBDDkqmDFQQIsB1f36SGyQuAZ9nUNVQI140aSCGYMN6ACxNhDrAbEuVEyFiuYDAK/ZAj8=
+  </data>
+ </layer>
+</map>

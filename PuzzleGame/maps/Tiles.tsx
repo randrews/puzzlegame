@@ -109,4 +109,67 @@
    <property name="Type" value="Boulder"/>
   </properties>
  </tile>
+ <tile id="38">
+  <properties>
+   <property name="Color" value="Blue"/>
+   <property name="Type" value="Switch"/>
+  </properties>
+ </tile>
+ <tile id="39">
+  <properties>
+   <property name="Color" value="Red"/>
+   <property name="Type" value="Switch"/>
+  </properties>
+ </tile>
+ <tile id="40">
+  <properties>
+   <property name="Color" value="Yellow"/>
+   <property name="Type" value="Switch"/>
+  </properties>
+ </tile>
+ <tile id="41">
+  <properties>
+   <property name="Color" value="Green"/>
+   <property name="Type" value="Switch"/>
+  </properties>
+ </tile>
+ <tile id="42">
+  <properties>
+   <property name="Color" value="Blue"/>
+   <property name="Type" value="Gate"/>
+  </properties>
+ </tile>
+ <tile id="43">
+  <properties>
+   <property name="Color" value="Red"/>
+   <property name="Type" value="Gate"/>
+  </properties>
+ </tile>
+ <tile id="44">
+  <properties>
+   <property name="Color" value="Yellow"/>
+   <property name="Type" value="Gate"/>
+  </properties>
+ </tile>
+ <tile id="45">
+  <properties>
+   <property name="Color" value="Green"/>
+   <property name="Type" value="Gate"/>
+  </properties>
+ </tile>
+ <tile id="46">
+  <properties>
+   <property name="Type" value="Skull"/>
+  </properties>
+ </tile>
+ <tile id="47">
+  <properties>
+   <property name="Type" value="SkullActive1"/>
+  </properties>
+ </tile>
+ <tile id="63">
+  <properties>
+   <property name="Type" value="SkullActive2"/>
+  </properties>
+ </tile>
 </tileset>
