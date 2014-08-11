@@ -163,6 +163,12 @@ namespace PuzzleGame
             Solid = false;
             Rectangle = _openRectangle;
         }
+
+        public override void PlayerEnter(Player player, GameController controller)
+        {
+            base.PlayerEnter(player, controller);
+            controller.ExitLevel();
+        }
     }
 
     public class Crate : Item

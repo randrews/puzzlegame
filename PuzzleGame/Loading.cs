@@ -178,5 +178,17 @@ namespace PuzzleGame
         {
             return new Size(Map.Width, Map.Height);
         }
+
+        private string ReadNextLevel()
+        {
+            var props = Map.Properties;
+            if (props.ContainsKey("NextLevel"))
+            {
+                var level = props["NextLevel"];
+                return Map.TmxDirectory + @"\" + level + ".tmx";
+            }
+            return null;
+        }
+
     }
 }

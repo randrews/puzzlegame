@@ -14,6 +14,17 @@ namespace PuzzleGame
     {
         public GameController Controller { get; set; }
 
+        private string _currentFilename;
+        private string CurrentFilename
+        {
+            get { return _currentFilename; }
+            set
+            {
+                _currentFilename = value;
+                restartButton.Enabled = (value != null);
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -31,19 +42,25 @@ namespace PuzzleGame
 
         private void openFileDialog_FileOk(object sender, CancelEventArgs e)
         {
+            OpenMap(openFileDialog.FileName);
+        }
+
+        public void OpenMap(string filename)
+        {
             try
             {
-                var map = new TiledSharp.TmxMap(openFileDialog.FileName);
+                var map = new TiledSharp.TmxMap(filename);
                 Controller = new GameController(this, map);
                 mapView1.Controller = Controller;
                 mapView1.Refresh();
+                CurrentFilename = filename;
             }
             catch (Exception exc)
             {
                 Console.WriteLine(exc);
                 MessageBox.Show(exc.Message, "Error loading map",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            }            
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -85,6 +102,14 @@ namespace PuzzleGame
         public void ShowMessage(string message)
         {
             mapView1.Message = message;
+        }
+
+        private void restartButton_Click(object sender, EventArgs e)
+        {
+            if (CurrentFilename != null)
+            {
+                OpenMap(CurrentFilename);
+            }
         }
     }
 }

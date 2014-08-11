@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="19" height="13" tilewidth="48" tileheight="48">
+ <properties>
+  <property name="NextLevel" value="level3"/>
+ </properties>
  <tileset firstgid="1" source="Tiles.tsx"/>
  <layer name="Floor" width="19" height="13">
   <data encoding="base64" compression="zlib">

@@ -55,6 +55,10 @@ namespace PuzzleGame
         public Player Player { get; private set; }
         public Exit Exit { get; private set; }
 
+        /// <summary>
+        /// The path to the next level's file.
+        /// </summary>
+        public string NextLevel { get; private set; }
         public GameController(MainWindow window, TmxMap map)
         {
             Window = window;
@@ -62,6 +66,7 @@ namespace PuzzleGame
             Tileset = LoadTileset();
             SetupAnimationFrames();
             MapSize = ReadMapSize();
+            NextLevel = ReadNextLevel();
             Items = LoadItems();
             Walls = LoadWalls();
             Floors = LoadFloors();
@@ -246,7 +251,7 @@ namespace PuzzleGame
             {
                 Items[newLocation.X, newLocation.Y] = pushed;
                 Items[location.X, location.Y] = null;
-                return true;                    
+                return true;
             }
 
             return false;
@@ -298,5 +303,19 @@ namespace PuzzleGame
         {
             Window.ShowMessage(message);
         }
+
+        public void ExitLevel()
+        {
+            if (NextLevel != null)
+            {
+                ShowMessage("Congratulations!\n\nPress any key to start the\nnext level");
+                Window.OpenMap("maps\\level2.tmx");
+            }
+            else
+            {
+                ShowMessage("Congratulations!\n\nYou have finished the\nlast level");
+            }
+        }
+
     }
 }
