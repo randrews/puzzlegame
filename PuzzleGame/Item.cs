@@ -8,6 +8,13 @@ namespace PuzzleGame
 {
     public class Item
     {
+        /// <summary>
+        /// We can only have one level loaded (and thus one tileset) at a time, so, to keep from having to
+        /// deal with passing things around a lot, we'll give the Item classes the ability to access the
+        /// sprites themselves. This makes the map loading code a LOT simpler.
+        /// </summary>
+        public static SpriteLibrary SpriteLibrary { get; set; }
+
         public string Type { get; set; }
         public Rectangle? Rectangle { get; set; }
 
@@ -190,6 +197,25 @@ namespace PuzzleGame
             Pushable = true;
             Solid = true;
             Heavy = true;
+        }
+    }
+
+    public class PlainFloor : Item
+    {
+        public PlainFloor(Rectangle rectangle)
+        {
+            Rectangle = rectangle;
+        }
+    }
+
+    public class SwitchFloor : Item
+    {
+        public Color Color { get; private set; }
+
+        public SwitchFloor(Color color, Rectangle rectangle)
+        {
+            Color = color;
+            Rectangle = rectangle;
         }
     }
 }

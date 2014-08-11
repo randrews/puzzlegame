@@ -67,7 +67,7 @@ namespace PuzzleGame
             if (Height < mapSize.Height)
                 e.Graphics.TranslateTransform(0, Height / 2 - playerCenter.Y);
 
-            DrawRectangles(Controller.Floors, e.Graphics);
+            DrawRectangles(Controller.FloorRectangles, e.Graphics);
             DrawRectangles(Controller.Walls, e.Graphics);
             DrawRectangles(Controller.GetItemRectangles(), e.Graphics);
             DrawPlayer(e.Graphics);

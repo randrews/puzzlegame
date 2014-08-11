@@ -12,32 +12,16 @@ namespace PuzzleGame
         public TmxMap Map { get; private set; }
         public MainWindow Window { get; private set; }
 
-        /// <summary>
-        /// Maps Type name to rectangle in Image, so we can look up tiles that aren't on the map at the start, like effects
-        /// </summary>
-        public Dictionary<string, Rectangle> Tileset { get; private set; }
-
+        private SpriteLibrary SpriteLibrary { get; set; }
         /// <summary>
         /// The image for the tileset
         /// </summary>
-        private Image _image;
-        public Image Image
-        {
-            get
-            {
-                if (_image == null)
-                {
-                    var filename = Map.Tilesets.First().Image.Source;
-                    _image = Image.FromFile(filename);
-                }
-                return _image;
-            } 
-        }
+        public Image Image { get { return SpriteLibrary.Image; } }
 
         /// <summary>
         /// Size of each tile in pixels
         /// </summary>
-        public Size TileSize { get; private set; }
+        public Size TileSize { get { return SpriteLibrary.TileSize; } }
         
         /// <summary>
         /// Size of the map in tiles
@@ -49,7 +33,22 @@ namespace PuzzleGame
         /// </summary>
         public Item[,] Items { get; private set; }
         public Rectangle?[,] Walls { get; private set; }
-        public Rectangle?[,] Floors { get; private set; }
+        public Item[,] Floors { get; private set; }
+
+        public Rectangle?[,] FloorRectangles
+        {
+            get
+            {
+                var rects = new Rectangle?[MapSize.Width, MapSize.Height];
+
+                for (int y = 0; y < MapSize.Height; y++)
+                    for (int x = 0; x < MapSize.Width; x++)
+                        if (Floors[x, y] != null)
+                            rects[x, y] = Floors[x, y].Rectangle;
+
+                return rects;
+            }
+        }
 
         public Point PlayerLocation { get; set; }
         public Player Player { get; private set; }
@@ -63,7 +62,9 @@ namespace PuzzleGame
         {
             Window = window;
             Map = map;
-            Tileset = LoadTileset();
+            SpriteLibrary = new SpriteLibrary(map);
+            Item.SpriteLibrary = SpriteLibrary;
+
             SetupAnimationFrames();
             MapSize = ReadMapSize();
             NextLevel = ReadNextLevel();

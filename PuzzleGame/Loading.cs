@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using TiledSharp;
 
 namespace PuzzleGame
 {
@@ -58,13 +59,41 @@ namespace PuzzleGame
         }
 
         /// <summary>
-        /// Return an array of rectangles to draw the floor with
+        /// Return an array of items representing the floor
         /// </summary>
         /// <returns></returns>
-        public Rectangle?[,] LoadFloors()
+        public Item[,] LoadFloors()
         {
-            return LayerToRectangles("Floor");
+            var cells = new Item[MapSize.Width, MapSize.Height];
+            var layer = Map.Layers["Floor"];
+            var tset = Map.Tilesets.First();
+            var tiles = tset.Tiles.ToDictionary(t => t.Id + tset.FirstGid);
+
+            foreach (var tile in layer.Tiles)
+            {
+                if (tile.Gid == 0) continue; // No item here
+                var tilesetTile = tiles[tile.Gid];
+                if (tilesetTile.Properties.ContainsKey("Type"))
+                {
+                    var type = tiles[tile.Gid].Properties["Type"];
+                    Rectangle? rect = GidToRectangle(tile.Gid);
+                    if (rect == null) throw new ArgumentException("Invalid gid " + tile.Gid);
+
+                    switch (type)
+                    {
+                        case "PlainFloor":
+                            cells[tile.X, tile.Y] = new PlainFloor((Rectangle) rect);
+                            break;
+                        case "Switch":
+                            cells[tile.X, tile.Y] = new SwitchFloor(ReadColor(tilesetTile), (Rectangle) rect);
+                            break;
+                    }
+                }
+            }
+
+            return cells;
         }
+
         /// <summary>
         /// Load the Items layer from the map into the 2d Items array
         /// </summary>
@@ -77,7 +106,6 @@ namespace PuzzleGame
             var tiles = tset.Tiles.ToDictionary(t => t.Id + tset.FirstGid);
             var playerSet = false;
             var exitSet = false;
-            Color color;
 
             var rand = new Random();
 
@@ -97,9 +125,7 @@ namespace PuzzleGame
                             cells[tile.X, tile.Y] = new Gold(GoldAnimationFrames, rand.Next(30));
                             break;
                         case "Key":
-                            if( ! tilesetTile.Properties.ContainsKey("Color")) throw new ArgumentException("Key doesn't have a Color property");
-                            if( ! Enum.TryParse(tilesetTile.Properties["Color"], true, out color)) throw new ArgumentException("Key has unrecognized color " + tilesetTile.Properties["Color"]);
-                            cells[tile.X, tile.Y] = new Key(color, (Rectangle) rect);
+                            cells[tile.X, tile.Y] = new Key(ReadColor(tilesetTile), (Rectangle) rect);
                             break;
                         case "Start":
                             if (playerSet) throw new ArgumentException("Map contains multiple start locations");
@@ -108,9 +134,7 @@ namespace PuzzleGame
                             playerSet = true;
                             break;
                         case "Door":
-                            if( ! tilesetTile.Properties.ContainsKey("Color")) throw new ArgumentException("Door doesn't have a Color property");
-                            if( ! Enum.TryParse(tilesetTile.Properties["Color"], true, out color)) throw new ArgumentException("Door has unrecognized color " + tilesetTile.Properties["Color"]);
-                            cells[tile.X, tile.Y] = new Door(color, (Rectangle) rect);
+                            cells[tile.X, tile.Y] = new Door(ReadColor(tilesetTile), (Rectangle) rect);
                             break;
                         case "Scroll":
                             if( ! Map.Properties.ContainsKey("ScrollMessage")) throw new ArgumentException("Map contains scrolls but no ScrollMessage");
@@ -126,7 +150,7 @@ namespace PuzzleGame
                             break;
                         case "Exit":
                             if(exitSet) throw new ArgumentException("Map contains multiple exits");
-                            Exit = new Exit((Rectangle) rect, Tileset["ExitOpen"]);
+                            Exit = new Exit((Rectangle) rect, SpriteLibrary["ExitOpen"].Rectangle);
                             cells[tile.X, tile.Y] = Exit;
                             exitSet = true;
                             break;
@@ -143,35 +167,13 @@ namespace PuzzleGame
             return cells;
         }
 
-        /// <summary>
-        /// Reads through the map's tileset to find which rectangles go to which tile types.
-        /// We assume that all the tiles we care about have Type properties; these are what tell the
-        /// game semantically what the tiles mean.
-        /// 
-        /// Some tiles will have non-unique types, like "door" and "key". That's okay because when we
-        /// read the map Items layer, anything on there that has a Type will use whatever rect it has
-        /// in the editor. This is more for looking up rects that aren't in the map at the start, like
-        /// the player sprite and effect frames.
-        /// </summary>
-        /// <returns>A dictionary from Type string to rectangle</returns>
-        private Dictionary<string, Rectangle> LoadTileset()
+        private Color ReadColor(TmxTilesetTile tilesetTile)
         {
-            var tset = Map.Tilesets.First();
-            var dict = new Dictionary<string, Rectangle>();
-
-            TileSize = new Size(tset.TileWidth, tset.TileHeight);
-
-            foreach (var tile in tset.Tiles)
-            {
-                if (tile.Properties.ContainsKey("Type"))
-                {
-                    int gid = tile.Id + tset.FirstGid;
-                    var rect = GidToRectangle(gid);
-                    if (rect != null) dict[tile.Properties["Type"]] = (Rectangle)rect;
-                }
-            }
-
-            return dict;
+            Color color;
+            if (! tilesetTile.Properties.ContainsKey("Color")) throw new ArgumentException("Key doesn't have a Color property");
+            if (! Enum.TryParse(tilesetTile.Properties["Color"], true, out color))
+                throw new ArgumentException("Key has unrecognized color " + tilesetTile.Properties["Color"]);
+            return color;
         }
 
         private Size ReadMapSize()

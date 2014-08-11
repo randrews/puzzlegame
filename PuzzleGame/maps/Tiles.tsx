@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset name="Tiles" tilewidth="48" tileheight="48">
  <image source="../art/tiles.png" width="768" height="192"/>
+ <tile id="16">
+  <properties>
+   <property name="Type" value="PlainFloor"/>
+  </properties>
+ </tile>
  <tile id="17">
   <properties>
    <property name="Color" value="Blue"/>
@@ -165,6 +170,30 @@
  <tile id="47">
   <properties>
    <property name="Type" value="SkullActive1"/>
+  </properties>
+ </tile>
+ <tile id="54">
+  <properties>
+   <property name="Color" value="Blue"/>
+   <property name="Type" value="ActiveSwitch"/>
+  </properties>
+ </tile>
+ <tile id="55">
+  <properties>
+   <property name="Color" value="Red"/>
+   <property name="Type" value="ActiveSwitch"/>
+  </properties>
+ </tile>
+ <tile id="56">
+  <properties>
+   <property name="Color" value="Yellow"/>
+   <property name="Type" value="ActiveSwitch"/>
+  </properties>
+ </tile>
+ <tile id="57">
+  <properties>
+   <property name="Color" value="Green"/>
+   <property name="Type" value="ActiveSwitch"/>
   </properties>
  </tile>
  <tile id="63">
