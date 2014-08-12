@@ -54,6 +54,7 @@
     <Compile Include="Items\Crate.cs" />
     <Compile Include="Items\Door.cs" />
     <Compile Include="Items\Exit.cs" />
+    <Compile Include="Items\Gate.cs" />
     <Compile Include="Items\Gold.cs" />
     <Compile Include="Items\Key.cs" />
     <Compile Include="Items\PlainFloor.cs" />

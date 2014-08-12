@@ -118,6 +118,9 @@ namespace PuzzleGame
                     case "Door":
                         cells[tile.X, tile.Y] = new Door(sprite);
                         break;
+                    case "Gate":
+                        cells[tile.X, tile.Y] = new Gate(sprite);
+                        break;
                     case "Scroll":
                         if( ! Map.Properties.ContainsKey("ScrollMessage")) throw new ArgumentException("Map contains scrolls but no ScrollMessage");
                         var msg = Map.Properties["ScrollMessage"];
