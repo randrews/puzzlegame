@@ -5,7 +5,7 @@ namespace PuzzleGame
 {
     public struct AnimationFrame
     {
-        public Rectangle Rectangle { get; set; }
+        public Sprite Sprite { get; set; }
         public int Ticks { get; set; }
     }
 
@@ -43,7 +43,7 @@ namespace PuzzleGame
             }
 
             _currentTick = startTick;
-            Rectangle = _animationFrames[_frame].Rectangle;
+            Sprite = _animationFrames[_frame].Sprite;
         }
 
         private Rectangle[] CreateFrameOrder(Rectangle[] animationFrames)
@@ -83,7 +83,7 @@ namespace PuzzleGame
                 }
 
                 _currentTick = 0;
-                Rectangle = _animationFrames[_frame].Rectangle;
+                Sprite = _animationFrames[_frame].Sprite;
             }
         }
     }

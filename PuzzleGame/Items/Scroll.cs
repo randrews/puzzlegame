@@ -6,9 +6,9 @@ namespace PuzzleGame.Items
     {
         private string _message;
 
-        public Scroll(string message, Rectangle rectangle)
+        public Scroll(string message, Sprite sprite)
         {
-            Rectangle = rectangle;
+            Sprite = sprite;
             _message = message;
             Solid = false;
         }

@@ -14,8 +14,8 @@ namespace PuzzleGame.Items
         {
             SetAnimation(new[]
             {
-                new AnimationFrame{Rectangle = SpriteLibrary["Player1"].Rectangle, Ticks = 5},
-                new AnimationFrame{Rectangle = SpriteLibrary["Player2"].Rectangle, Ticks = 5},
+                new AnimationFrame{Sprite = SpriteLibrary["Player1"], Ticks = 5},
+                new AnimationFrame{Sprite = SpriteLibrary["Player2"], Ticks = 5},
             },
             0);
 

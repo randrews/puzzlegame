@@ -4,9 +4,9 @@ namespace PuzzleGame.Items
 {
     public class Crate : Item
     {
-        public Crate(Rectangle rectangle)
+        public Crate(Sprite sprite)
         {
-            Rectangle = rectangle;
+            Sprite = sprite;
             Pushable = true;
             Solid = true;
             Heavy = false;

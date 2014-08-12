@@ -4,9 +4,9 @@ namespace PuzzleGame.Items
 {
     public class PlainFloor : Item
     {
-        public PlainFloor(Rectangle rectangle)
+        public PlainFloor(Sprite sprite)
         {
-            Rectangle = rectangle;
+            Sprite = sprite;
         }
     }
 }

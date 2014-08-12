@@ -6,10 +6,10 @@ namespace PuzzleGame.Items
     {
         public Color Color { get; private set; }
 
-        public SwitchFloor(Color color, Rectangle rectangle)
+        public SwitchFloor(Sprite sprite)
         {
-            Color = color;
-            Rectangle = rectangle;
+            Color = Sprite.Color;
+            Sprite = sprite;
         }
     }
 }

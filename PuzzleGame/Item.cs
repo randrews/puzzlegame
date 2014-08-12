@@ -1,8 +1,6 @@
-﻿using System;
+﻿using PuzzleGame.Items;
+using System;
 using System.Drawing;
-using System.Text;
-using System.Threading.Tasks;
-using PuzzleGame.Items;
 
 namespace PuzzleGame
 {
@@ -22,8 +20,9 @@ namespace PuzzleGame
         /// </summary>
         public static Random Random { get; set; }
 
+        public Sprite Sprite { get; set; }
         public string Type { get; set; }
-        public Rectangle? Rectangle { get; set; }
+        public Rectangle Rectangle { get { return Sprite.Rectangle; } }
 
         /// <summary>
         /// Solid objects, the player can't walk through.

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Windows.Forms.VisualStyles;
 using PuzzleGame.Items;
 using TiledSharp;
 
@@ -77,16 +78,15 @@ namespace PuzzleGame
                 if (tilesetTile.Properties.ContainsKey("Type"))
                 {
                     var type = tiles[tile.Gid].Properties["Type"];
-                    Rectangle? rect = GidToRectangle(tile.Gid);
-                    if (rect == null) throw new ArgumentException("Invalid gid " + tile.Gid);
+                    var sprite = SpriteLibrary[tile.Gid];
 
                     switch (type)
                     {
                         case "PlainFloor":
-                            cells[tile.X, tile.Y] = new PlainFloor((Rectangle) rect);
+                            cells[tile.X, tile.Y] = new PlainFloor(sprite);
                             break;
                         case "Switch":
-                            cells[tile.X, tile.Y] = new SwitchFloor(ReadColor(tilesetTile), (Rectangle) rect);
+                            cells[tile.X, tile.Y] = new SwitchFloor(sprite);
                             break;
                     }
                 }
@@ -115,8 +115,7 @@ namespace PuzzleGame
                 if (tilesetTile.Properties.ContainsKey("Type"))
                 {
                     var type = tiles[tile.Gid].Properties["Type"];
-                    Rectangle? rect = GidToRectangle(tile.Gid);
-                    if(rect == null) throw new ArgumentException("Invalid gid " + tile.Gid);
+                    var sprite = SpriteLibrary[tile.Gid];
 
                     switch (type)
                     {
@@ -124,7 +123,7 @@ namespace PuzzleGame
                             cells[tile.X, tile.Y] = new Gold();
                             break;
                         case "Key":
-                            cells[tile.X, tile.Y] = new Key(ReadColor(tilesetTile), (Rectangle) rect);
+                            cells[tile.X, tile.Y] = new Key(SpriteLibrary[tile.Gid]);
                             break;
                         case "Start":
                             if (playerSet) throw new ArgumentException("Map contains multiple start locations");
@@ -133,28 +132,28 @@ namespace PuzzleGame
                             playerSet = true;
                             break;
                         case "Door":
-                            cells[tile.X, tile.Y] = new Door(ReadColor(tilesetTile), (Rectangle) rect);
+                            cells[tile.X, tile.Y] = new Door(SpriteLibrary[tile.Gid]);
                             break;
                         case "Scroll":
                             if( ! Map.Properties.ContainsKey("ScrollMessage")) throw new ArgumentException("Map contains scrolls but no ScrollMessage");
                             var msg = Map.Properties["ScrollMessage"];
                             msg = msg.Replace('~', '\n');
-                            cells[tile.X, tile.Y] = new Scroll(msg, (Rectangle) rect);
+                            cells[tile.X, tile.Y] = new Scroll(msg, sprite);
                             break;
                         case "Crate":
-                            cells[tile.X, tile.Y] = new Crate((Rectangle)rect);
+                            cells[tile.X, tile.Y] = new Crate(sprite);
                             break;
                         case "Boulder":
-                            cells[tile.X, tile.Y] = new Boulder((Rectangle)rect);
+                            cells[tile.X, tile.Y] = new Boulder(sprite);
                             break;
                         case "Exit":
                             if(exitSet) throw new ArgumentException("Map contains multiple exits");
-                            Exit = new Exit((Rectangle) rect, SpriteLibrary["ExitOpen"].Rectangle);
+                            Exit = new Exit();
                             cells[tile.X, tile.Y] = Exit;
                             exitSet = true;
                             break;
                         default:
-                            cells[tile.X, tile.Y] = new Item { Type = type, Rectangle = rect };
+                            cells[tile.X, tile.Y] = new Item { Type = type, Sprite = sprite };
                             break;
                     }
                 }

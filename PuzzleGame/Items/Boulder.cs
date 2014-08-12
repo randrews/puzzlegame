@@ -4,9 +4,9 @@ namespace PuzzleGame.Items
 {
     public class Boulder : Item
     {
-        public Boulder(Rectangle rectangle)
+        public Boulder(Sprite sprite)
         {
-            Rectangle = rectangle;
+            Sprite = sprite;
             Pushable = true;
             Solid = true;
             Heavy = true;

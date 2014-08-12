@@ -6,10 +6,10 @@ namespace PuzzleGame.Items
     {
         public Color Color { get; private set; }
 
-        public Key(Color color, Rectangle rectangle)
+        public Key(Sprite sprite)
         {
-            Color = color;
-            Rectangle = rectangle;
+            Color = sprite.Color;
+            Sprite = sprite;
             Solid = false;
         }
 

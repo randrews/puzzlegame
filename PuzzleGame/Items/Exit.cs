@@ -4,12 +4,9 @@ namespace PuzzleGame.Items
 {
     public class Exit : Item
     {
-        private Rectangle _openRectangle;
-
-        public Exit(Rectangle rectangle, Rectangle openRectangle)
+        public Exit()
         {
-            Rectangle = rectangle;
-            _openRectangle = openRectangle;
+            Sprite = SpriteLibrary["Exit"];
             Solid = true;
         }
 
@@ -19,7 +16,7 @@ namespace PuzzleGame.Items
         public void Open()
         {
             Solid = false;
-            Rectangle = _openRectangle;
+            Sprite = SpriteLibrary["ExitOpen"];
         }
 
         public override void PlayerEnter(Player player, GameController controller)
