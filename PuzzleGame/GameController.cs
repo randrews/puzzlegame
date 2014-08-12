@@ -33,7 +33,8 @@ namespace PuzzleGame
         /// 2D array of all the items in their current locations
         /// </summary>
         public Item[,] Items { get; private set; }
-        public Rectangle?[,] Walls { get; private set; }
+        public Grid<Sprite> Walls { get; private set; }
+
         public Item[,] Floors { get; private set; }
 
         public Rectangle?[,] FloorRectangles
@@ -103,15 +104,15 @@ namespace PuzzleGame
         /// </summary>
         /// <param name="layerName"></param>
         /// <returns></returns>
-        private Rectangle?[,] LayerToRectangles(string layerName)
+        private Grid<Sprite> LayerToSprites(string layerName)
         {
-            var cells = new Rectangle?[MapSize.Width, MapSize.Height];
+            var cells = new Grid<Sprite>(MapSize.Width, MapSize.Height);
             var layer = Map.Layers[layerName];
 
             foreach (var tile in layer.Tiles)
             {
                 if(tile.Gid == 0) continue;
-                cells[tile.X,tile.Y] = SpriteLibrary[tile.Gid].Rectangle;
+                cells[tile.X,tile.Y] = SpriteLibrary[tile.Gid];
             }
 
             return cells;
@@ -123,7 +124,7 @@ namespace PuzzleGame
         /// <param name="direction">The direction we'll be moving</param>
         internal void MoveCommand(Direction direction)
         {
-            var newLocation = TranslateLocation(PlayerLocation, direction);
+            var newLocation = Grid<Item>.TranslateLocation(PlayerLocation, direction);
 
             if (InBounds(newLocation) && Walls[newLocation.X, newLocation.Y] == null) // No wall there
             {
@@ -174,29 +175,6 @@ namespace PuzzleGame
                    p.Y >= 0 && p.Y < MapSize.Height;
         }
 
-        private Point TranslateLocation(Point p, Direction direction)
-        {
-            var newLocation = new Point(p.X, p.Y);
-
-            switch (direction)
-            {
-                case Direction.Up:
-                    newLocation.Y--;
-                    break;
-                case Direction.Down:
-                    newLocation.Y++;
-                    break;
-                case Direction.Left:
-                    newLocation.X--;
-                    break;
-                case Direction.Right:
-                    newLocation.X++;
-                    break;
-            }
-
-            return newLocation;
-        }
-
         /// <summary>
         /// Try to push an item in a direction
         /// </summary>
@@ -206,7 +184,7 @@ namespace PuzzleGame
         /// <returns></returns>
         private bool TryPush(Point location, Direction direction, bool byPlayer)
         {
-            var newLocation = TranslateLocation(location, direction);
+            var newLocation = Grid<Item>.TranslateLocation(location, direction);
             if (! InBounds(newLocation)) return false; // First, are we trying to push it off the map?
             if (Walls[newLocation.X, newLocation.Y] != null) return false; // Trying to push into a wall, so no.
 

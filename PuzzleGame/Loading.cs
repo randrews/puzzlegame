@@ -11,49 +11,46 @@ namespace PuzzleGame
         /// Return an array of src rectangles (in the map's image) to draw the wall layer
         /// </summary>
         /// <returns></returns>
-        private Rectangle?[,] LoadWalls()
+        private Grid<Sprite> LoadWalls()
         {
-            var cells = LayerToRectangles("Walls");
+            var cells = LayerToSprites("Walls");
 
-            for (int y = 0; y < cells.GetLength(1); y++)
+            cells.Each((sprite, p) =>
             {
-                for (int x = 0; x < cells.GetLength(0); x++)
-                {
-                    if (cells[x, y] == null) continue;
+                // Whether there are walls to the n/s/e/w of us
+                bool n = p.Y > 0 && cells[p.X, p.Y - 1] != null;
+                bool s = p.Y < cells.GridSize.Height - 1 && cells[p.X, p.Y + 1] != null;
+                bool e = p.X < cells.GridSize.Width - 1 && cells[p.X + 1, p.Y] != null;
+                bool w = p.X > 0 && cells[p.X - 1, p.Y] != null;
 
-                    // Whether there are walls to the n/s/e/w of us
-                    bool n = y > 0 && cells[x, y - 1] != null;
-                    bool s = y < cells.GetLength(1) - 1 && cells[x, y + 1] != null;
-                    bool e = x < cells.GetLength(0) - 1 && cells[x + 1, y] != null;
-                    bool w = x > 0 && cells[x - 1, y] != null;
+                int column = 10; // column of the wall tile we'll use
 
-                    int column = 10; // column of the wall tile we'll use
+                // Pick out the wall tile's column based on the neighbors
+                // ReSharper disable ConditionIsAlwaysTrueOrFalse
+                if (!n && !s && !e && !w) column = 0;
+                else if (!n && !s && e && !w) column = 1;
+                else if (!n && !s && e && w) column = 2;
+                else if (!n && !s && !e && w) column = 3;
+                else if (!n && s && !e && !w) column = 4;
+                else if (n && s && !e && !w) column = 5;
+                else if (n && !s && !e && !w) column = 6;
+                else if (!n && s && e && !w) column = 7;
+                else if (!n && s && !e && w) column = 8;
+                else if (n && !s && e && !w) column = 9;
+                else if (n && !s && !e && w) column = 10;
+                else if (n && s && e && w) column = 11;
+                else if (!n && s && e && w) column = 12;
+                else if (n && s && !e && w) column = 13;
+                else if (n && s && e && !w) column = 14;
+                else if (n && !s && e && w) column = 15;
+                // ReSharper restore ConditionIsAlwaysTrueOrFalse
 
-                    // Pick out the wall tile's column based on the neighbors
-                    // ReSharper disable ConditionIsAlwaysTrueOrFalse
-                    if (!n && !s && !e && !w) column = 0;
-                    else if (!n && !s && e && !w) column = 1;
-                    else if (!n && !s && e && w) column = 2;
-                    else if (!n && !s && !e && w) column = 3;
-                    else if (!n && s && !e && !w) column = 4;
-                    else if (n && s && !e && !w) column = 5;
-                    else if (n && !s && !e && !w) column = 6;
-                    else if (!n && s && e && !w) column = 7;
-                    else if (!n && s && !e && w) column = 8;
-                    else if (n && !s && e && !w) column = 9;
-                    else if (n && !s && !e && w) column = 10;
-                    else if (n && s && e && w) column = 11;
-                    else if (!n && s && e && w) column = 12;
-                    else if (n && s && !e && w) column = 13;
-                    else if (n && s && e && !w) column = 14;
-                    else if (n && !s && e && w) column = 15;
-                    // ReSharper restore ConditionIsAlwaysTrueOrFalse
+                // Use that column, with the row of the original tile
+                // ReSharper disable once PossibleInvalidOperationException
+                var rect = new Rectangle(column * TileSize.Width, sprite.Rectangle.Y, TileSize.Width, TileSize.Height);
+                cells[p] = new Sprite { Rectangle = rect };
 
-                    // Use that column, with the row of the original tile
-                    // ReSharper disable once PossibleInvalidOperationException
-                    cells[x, y] = new Rectangle(column * TileSize.Width, ((Rectangle)cells[x, y]).Y, TileSize.Width, TileSize.Height);
-                }
-            }
+            });
             return cells;
         }
 

@@ -125,6 +125,18 @@ namespace PuzzleGame
             }            
         }
 
+        private void DrawRectangles(Grid<Sprite> sprites, Graphics g)
+        {
+            int w = Controller.TileSize.Width;
+            int h = Controller.TileSize.Height;
+
+            sprites.Each((sprite, p) =>
+            {
+                var dest = new Rectangle(p.X * w, p.Y * h, w, h);
+                g.DrawImage(_image, dest, sprite.Rectangle, GraphicsUnit.Pixel);                
+            });
+        }
+
         private void animationTimer_Tick(object sender, EventArgs e)
         {
             if (ShowingMessage) return;
