@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace PuzzleGame
 {
+    /// <summary>
+    /// The Grid class is IEnumerable, but the enumeration only goes over cells that have something in them.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public partial class Grid<T> : IEnumerable<T>
     {
         public IEnumerator<T> GetEnumerator()

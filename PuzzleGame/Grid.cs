@@ -15,10 +15,12 @@ namespace PuzzleGame
         private T[,] _cells;
         public Size GridSize { get; private set; }
 
-        public Grid(int width, int height)
+        public Grid(int width, int height) : this(new Size(width, height)){}
+
+        public Grid(Size size)
         {
-            _cells = new T[width, height];
-            GridSize = new Size(width, height);
+            _cells = new T[size.Width, size.Height];
+            GridSize = size;
         }
 
         public bool InBounds(Point p)

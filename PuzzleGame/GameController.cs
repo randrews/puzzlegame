@@ -32,34 +32,18 @@ namespace PuzzleGame
         /// <summary>
         /// 2D array of all the items in their current locations
         /// </summary>
-        public Item[,] Items { get; private set; }
+        public Grid<Item> Items { get; private set; }
         public Grid<Sprite> Walls { get; private set; }
-
-        public Item[,] Floors { get; private set; }
-
-        public Rectangle?[,] FloorRectangles
-        {
-            get
-            {
-                var rects = new Rectangle?[MapSize.Width, MapSize.Height];
-
-                for (int y = 0; y < MapSize.Height; y++)
-                    for (int x = 0; x < MapSize.Width; x++)
-                        if (Floors[x, y] != null)
-                            rects[x, y] = Floors[x, y].Rectangle;
-
-                return rects;
-            }
-        }
+        public Grid<Item> Floors { get; private set; }
 
         public Point PlayerLocation { get; set; }
         public Player Player { get; private set; }
-        public Exit Exit { get; private set; }
 
         /// <summary>
         /// The path to the next level's file.
         /// </summary>
         public string NextLevel { get; private set; }
+
         public GameController(MainWindow window, TmxMap map)
         {
             Window = window;
@@ -78,35 +62,15 @@ namespace PuzzleGame
         }
 
         /// <summary>
-        /// Return an array of rectangles for the item layer. This is the item layer as it currently
-        /// stands, not what it was when the map loaded.
-        /// </summary>
-        /// <returns></returns>
-        public Rectangle?[,] GetItemRectangles()
-        {
-            var rectangles = new Rectangle?[Items.GetLength(0), Items.GetLength(1)];
-
-            for (int y = 0; y < Items.GetLength(1); y++)
-            {
-                for (int x = 0; x < Items.GetLength(0); x++)
-                {
-                    if(Items[x,y] != null) rectangles[x, y] = Items[x, y].Rectangle;
-                }
-            }
-
-            return rectangles;
-        }
-
-        /// <summary>
-        /// Reads a layer of the map, and returns the rectangles associated with each tile.
-        /// This is the rectangles for the tile regardless of that tile's Type attribute;
-        /// whatever tile Tiled shows, that's the rect you get.
+        /// Reads a layer of the map, and returns the sprites associated with each tile.
+        /// This is the sprite for the tile regardless of that tile's Type attribute;
+        /// whatever tile Tiled shows, that's the sprite you get.
         /// </summary>
         /// <param name="layerName"></param>
         /// <returns></returns>
         private Grid<Sprite> LayerToSprites(string layerName)
         {
-            var cells = new Grid<Sprite>(MapSize.Width, MapSize.Height);
+            var cells = new Grid<Sprite>(MapSize);
             var layer = Map.Layers[layerName];
 
             foreach (var tile in layer.Tiles)
@@ -126,24 +90,26 @@ namespace PuzzleGame
         {
             var newLocation = Grid<Item>.TranslateLocation(PlayerLocation, direction);
 
-            if (InBounds(newLocation) && Walls[newLocation.X, newLocation.Y] == null) // No wall there
+            if (Items.InBounds(newLocation) && Walls[newLocation] == null) // No wall there
             {
                 // First, is there an item there? If not, we're good
-                if (Items[newLocation.X, newLocation.Y] == null)
+                if (Items[newLocation] == null)
                     PlayerLocation = newLocation;
                 else
                 {
-                    var item = Items[newLocation.X, newLocation.Y];
+                    var item = Items[newLocation];
                     if (!item.Solid) // There's an item but it's not solid. Move on top of it, and tell it so
                     {
                         PlayerLocation = newLocation;
                         item.PlayerEnter(Player, this);
+                        if (Floors[newLocation] != null) Floors[newLocation].PlayerEnter(Player, this);
                     }
                     else if (item.Pushable) // Try pushing the object
                     {
                         if(TryPush(newLocation, direction, true)) // This returns true if it can be pushed, with the side effect of actually pushing it
                         {
                             PlayerLocation = newLocation;
+                            if (Floors[newLocation] != null) Floors[newLocation].PlayerEnter(Player, this);
                         }
                     }
                     else // It's solid, so bump into it and see what it does
@@ -153,26 +119,37 @@ namespace PuzzleGame
                 }
             }
 
+            // We just had a turn and a tick, so, fire those:
+            Items.Each((item, point) => item.Turn(this, point));
+            Floors.Each((floor, point) => floor.Turn(this, point));
+
             // Now, remove any items that died this round
-            for (int y = 0; y < Items.GetLength(1); y++)
-                for (int x = 0; x < Items.GetLength(0); x++)
-                    if (Items[x, y] != null && Items[x, y].Dead)
-                        Items[x, y] = null;
+            Items.Each((item, point) =>
+            {
+                if (item.Dead) Items[point] = null;
+            });
 
             // Update the status label
             Window.UpdateStatusLabel(GetStatusLabel());
 
             // If there's no gold left, open the exit
             if (!Items.OfType<Gold>().Any())
-            {
-                Exit.Open();
-            }
-        }
+                Items.OfType<Exit>().First().Open();
 
-        private bool InBounds(Point p)
-        {
-            return p.X >= 0 && p.X < MapSize.Width && // X in bounds
-                   p.Y >= 0 && p.Y < MapSize.Height;
+            // If there are no inactive switches, open some gates:
+            var switches = Floors.OfType<SwitchFloor>();
+            
+            foreach (Color color in Enum.GetValues(typeof(Color)))
+            {
+                var gates = Items.OfTypeAndColor<Gate>(color).ToList();
+                var floors = Floors.OfTypeAndColor<SwitchFloor>(color);
+
+                if (floors.Any(s => !((SwitchFloor)s).Active))
+                    gates.ForEach(g => ((Gate)g).Open = false);
+                else
+                    gates.ForEach(g => ((Gate)g).Open = true);
+            }
+
         }
 
         /// <summary>
@@ -185,11 +162,11 @@ namespace PuzzleGame
         private bool TryPush(Point location, Direction direction, bool byPlayer)
         {
             var newLocation = Grid<Item>.TranslateLocation(location, direction);
-            if (! InBounds(newLocation)) return false; // First, are we trying to push it off the map?
-            if (Walls[newLocation.X, newLocation.Y] != null) return false; // Trying to push into a wall, so no.
+            if (! Items.InBounds(newLocation)) return false; // First, are we trying to push it off the map?
+            if (Walls[newLocation] != null) return false; // Trying to push into a wall, so no.
 
-            var pushed = Items[location.X, location.Y]; // The thing we're pushing
-            var pushedInto = Items[newLocation.X, newLocation.Y]; // Contents of the space we're pushing it into
+            var pushed = Items[location]; // The thing we're pushing
+            var pushedInto = Items[newLocation]; // Contents of the space we're pushing it into
 
             // Wait, there's no item being pushed? That's the caller's problem
             if(pushed == null) throw new ArgumentException("Trying to push an empty space");
@@ -202,8 +179,8 @@ namespace PuzzleGame
             {
                 if (pushed.Heavy && !byPlayer) return false; // Heavy things can only be pushed by the player directly, not other things
 
-                Items[newLocation.X, newLocation.Y] = pushed;
-                Items[location.X, location.Y] = null;
+                Items[newLocation] = pushed;
+                Items[location] = null;
                 return true;
             }
 
@@ -213,8 +190,8 @@ namespace PuzzleGame
 
             if (TryPush(newLocation, direction, false)) // Try to push it. If this returns true, then newLocation must be empty...
             {
-                Items[newLocation.X, newLocation.Y] = pushed;
-                Items[location.X, location.Y] = null;
+                Items[newLocation] = pushed;
+                Items[location] = null;
                 return true;
             }
 
@@ -240,25 +217,13 @@ namespace PuzzleGame
             if (!Player.HasAnyKeys()) return "";
             var keys = new List<string>();
 
-            if (Player.Keys[Color.Blue] == 1)
-                keys.Add("blue");
-            else if (Player.Keys[Color.Blue] > 1)
-                keys.Add(string.Format("blue ({0})", Player.Keys[Color.Blue]));
-
-            if (Player.Keys[Color.Green] == 1)
-                keys.Add("green");
-            else if (Player.Keys[Color.Green] > 1)
-                keys.Add(string.Format("green ({0})", Player.Keys[Color.Green]));
-
-            if (Player.Keys[Color.Red] == 1)
-                keys.Add("red");
-            else if (Player.Keys[Color.Red] > 1)
-                keys.Add(string.Format("red ({0})", Player.Keys[Color.Red]));
-
-            if (Player.Keys[Color.Yellow] == 1)
-                keys.Add("yellow");
-            else if (Player.Keys[Color.Yellow] > 1)
-                keys.Add(string.Format("yellow ({0})", Player.Keys[Color.Yellow]));
+            foreach (Color color in Enum.GetValues(typeof(Color)))
+            {
+                if (Player.Keys[color] == 1)
+                    keys.Add(color.ToString());
+                else if (Player.Keys[color] > 1)
+                    keys.Add(string.Format("{0} ({1})", color.ToString(), Player.Keys[color]));                
+            }
 
             return string.Format("Keys: {0}", string.Join(", ", keys));
         }
@@ -280,6 +245,13 @@ namespace PuzzleGame
                 ShowMessage("Congratulations!\n\nYou have finished the\nlast level");
             }
         }
+    }
 
+    static class Extensions
+    {
+        public static IEnumerable<Item> OfTypeAndColor<T>(this Grid<Item> grid, Color color) where T : Item
+        {
+            return grid.OfType<T>().Where(i => i.Color == color);
+        } 
     }
 }

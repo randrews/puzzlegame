@@ -58,9 +58,9 @@ namespace PuzzleGame
         /// Return an array of items representing the floor
         /// </summary>
         /// <returns></returns>
-        public Item[,] LoadFloors()
+        public Grid<Item> LoadFloors()
         {
-            var cells = new Item[MapSize.Width, MapSize.Height];
+            var cells = new Grid<Item>(MapSize);
             var layer = Map.Layers["Floor"];
 
             foreach (var tile in layer.Tiles)
@@ -86,12 +86,11 @@ namespace PuzzleGame
         /// Load the Items layer from the map into the 2d Items array
         /// </summary>
         /// <returns></returns>
-        private Item[,] LoadItems()
+        private Grid<Item> LoadItems()
         {
-            var cells = new Item[MapSize.Width, MapSize.Height];
+            var cells = new Grid<Item>(MapSize);
             var layer = Map.Layers["Items"];
             var playerSet = false;
-            var exitSet = false;
 
             foreach (var tile in layer.Tiles)
             {
@@ -131,10 +130,7 @@ namespace PuzzleGame
                         cells[tile.X, tile.Y] = new Boulder(sprite);
                         break;
                     case "Exit":
-                        if(exitSet) throw new ArgumentException("Map contains multiple exits");
-                        Exit = new Exit();
-                        cells[tile.X, tile.Y] = Exit;
-                        exitSet = true;
+                        cells[tile.X, tile.Y] = new Exit();
                         break;
                     default:
                         cells[tile.X, tile.Y] = new Item { Type = sprite.Type, Sprite = sprite };
@@ -143,7 +139,10 @@ namespace PuzzleGame
             }
 
             if (!playerSet) throw new ArgumentException("Map contains no start location");
-            if (!exitSet) throw new ArgumentException("Map contains no exit");
+
+            var exits = cells.Where(item => item is Exit);
+            if (!exits.Any()) throw new ArgumentException("Map contains no exit");
+            if (exits.Count() > 1) throw new ArgumentException("Map contains multiple exits");
 
             return cells;
         }

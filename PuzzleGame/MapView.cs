@@ -67,9 +67,9 @@ namespace PuzzleGame
             if (Height < mapSize.Height)
                 e.Graphics.TranslateTransform(0, Height / 2 - playerCenter.Y);
 
-            DrawRectangles(Controller.FloorRectangles, e.Graphics);
+            DrawRectangles(Controller.Floors, e.Graphics);
             DrawRectangles(Controller.Walls, e.Graphics);
-            DrawRectangles(Controller.GetItemRectangles(), e.Graphics);
+            DrawRectangles(Controller.Items, e.Graphics);
             DrawPlayer(e.Graphics);
 
             if (ShowingMessage) DisplayMessageBox(e.Graphics);
@@ -135,6 +135,19 @@ namespace PuzzleGame
                 var dest = new Rectangle(p.X * w, p.Y * h, w, h);
                 g.DrawImage(_image, dest, sprite.Rectangle, GraphicsUnit.Pixel);                
             });
+        }
+
+        private void DrawRectangles(Grid<Item> items, Graphics g)
+        {
+            int w = Controller.TileSize.Width;
+            int h = Controller.TileSize.Height;
+
+            items.Each((item, p) =>
+            {
+                var dest = new Rectangle(p.X * w, p.Y * h, w, h);
+                g.DrawImage(_image, dest, item.Sprite.Rectangle, GraphicsUnit.Pixel);
+            });
+
         }
 
         private void animationTimer_Tick(object sender, EventArgs e)

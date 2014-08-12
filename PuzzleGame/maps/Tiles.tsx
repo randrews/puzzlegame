@@ -196,6 +196,30 @@
    <property name="Type" value="ActiveSwitch"/>
   </properties>
  </tile>
+ <tile id="58">
+  <properties>
+   <property name="Color" value="Blue"/>
+   <property name="Type" value="OpenGate"/>
+  </properties>
+ </tile>
+ <tile id="59">
+  <properties>
+   <property name="Color" value="Red"/>
+   <property name="Type" value="OpenGate"/>
+  </properties>
+ </tile>
+ <tile id="60">
+  <properties>
+   <property name="Color" value="Yellow"/>
+   <property name="Type" value="OpenGate"/>
+  </properties>
+ </tile>
+ <tile id="61">
+  <properties>
+   <property name="Color" value="Green"/>
+   <property name="Type" value="OpenGate"/>
+  </properties>
+ </tile>
  <tile id="63">
   <properties>
    <property name="Type" value="SkullActive2"/>

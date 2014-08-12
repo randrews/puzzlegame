@@ -4,8 +4,6 @@ namespace PuzzleGame.Items
 {
     public class Door : Item
     {
-        public Color Color { get; private set; }
-
         public Door(Sprite sprite)
         {
             Sprite = sprite;

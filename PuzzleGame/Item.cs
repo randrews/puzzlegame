@@ -22,6 +22,7 @@ namespace PuzzleGame
 
         public Sprite Sprite { get; set; }
         public string Type { get; set; }
+        public Color Color { get; set; }
         public Rectangle Rectangle { get { return Sprite.Rectangle; } }
 
         /// <summary>
@@ -61,6 +62,20 @@ namespace PuzzleGame
         /// Called for a solid, non-pushable object when the player tries to move into it
         /// </summary>
         public virtual void Bump(Player player) { }
+
+        /// <summary>
+        /// This is an event called on every logical "turn" of the game: whenever the player moves, and when the turn timer fires
+        /// </summary>
+        /// <param name="controller"></param>
+        /// <param name="location"></param>
+        public virtual void Turn(GameController controller, Point location) { }
+
+        /// <summary>
+        /// This event fires when the turn timer fires, but NOT when the player moves.
+        /// </summary>
+        /// <param name="controller"></param>
+        /// <param name="location"></param>
+        public virtual void Tick(GameController controller, Point location) { }
 
         public Item()
         {
