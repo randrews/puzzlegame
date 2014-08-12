@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using PuzzleGame.Items;
+using System;
 using System.Drawing;
 using System.Linq;
-using System.Windows.Forms.VisualStyles;
-using PuzzleGame.Items;
-using TiledSharp;
 
 namespace PuzzleGame
 {
@@ -68,27 +65,20 @@ namespace PuzzleGame
         {
             var cells = new Item[MapSize.Width, MapSize.Height];
             var layer = Map.Layers["Floor"];
-            var tset = Map.Tilesets.First();
-            var tiles = tset.Tiles.ToDictionary(t => t.Id + tset.FirstGid);
 
             foreach (var tile in layer.Tiles)
             {
                 if (tile.Gid == 0) continue; // No item here
-                var tilesetTile = tiles[tile.Gid];
-                if (tilesetTile.Properties.ContainsKey("Type"))
-                {
-                    var type = tiles[tile.Gid].Properties["Type"];
-                    var sprite = SpriteLibrary[tile.Gid];
+                var sprite = SpriteLibrary[tile.Gid];
 
-                    switch (type)
-                    {
-                        case "PlainFloor":
-                            cells[tile.X, tile.Y] = new PlainFloor(sprite);
-                            break;
-                        case "Switch":
-                            cells[tile.X, tile.Y] = new SwitchFloor(sprite);
-                            break;
-                    }
+                switch (sprite.Type)
+                {
+                    case "PlainFloor":
+                        cells[tile.X, tile.Y] = new PlainFloor(sprite);
+                        break;
+                    case "Switch":
+                        cells[tile.X, tile.Y] = new SwitchFloor(sprite);
+                        break;
                 }
             }
 

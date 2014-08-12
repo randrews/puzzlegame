@@ -8,8 +8,8 @@ namespace PuzzleGame.Items
 
         public SwitchFloor(Sprite sprite)
         {
-            Color = Sprite.Color;
             Sprite = sprite;
+            Color = sprite.Color;
         }
     }
 }

@@ -8,8 +8,8 @@ namespace PuzzleGame.Items
 
         public Door(Sprite sprite)
         {
-            Color = sprite.Color;
             Sprite = sprite;
+            Color = sprite.Color;
             Solid = true;
         }
 

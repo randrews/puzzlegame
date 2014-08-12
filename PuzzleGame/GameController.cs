@@ -295,7 +295,7 @@ namespace PuzzleGame
             if (NextLevel != null)
             {
                 ShowMessage("Congratulations!\n\nPress any key to start the\nnext level");
-                Window.OpenMap("maps\\level2.tmx");
+                Window.OpenMap(NextLevel);
             }
             else
             {
