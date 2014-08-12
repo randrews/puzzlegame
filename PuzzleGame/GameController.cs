@@ -110,27 +110,11 @@ namespace PuzzleGame
 
             foreach (var tile in layer.Tiles)
             {
-                cells[tile.X,tile.Y] = GidToRectangle(tile.Gid);
+                if(tile.Gid == 0) continue;
+                cells[tile.X,tile.Y] = SpriteLibrary[tile.Gid].Rectangle;
             }
 
             return cells;
-        }
-
-        /// <summary>
-        /// Take a tile Gid and return its rectangle.
-        /// TODO: This assumes only one tileset
-        /// </summary>
-        /// <param name="gid"></param>
-        /// <returns></returns>
-        private Rectangle? GidToRectangle(int gid)
-        {
-            if (gid == 0) return null;
-            gid -= 1;
-            int width = Image.Width / TileSize.Width;
-            int x = gid%width;
-            int y = gid/width;
-
-            return new Rectangle(x*TileSize.Width, y*TileSize.Height, TileSize.Width, TileSize.Height);
         }
 
         /// <summary>

@@ -103,59 +103,52 @@ namespace PuzzleGame
         {
             var cells = new Item[MapSize.Width, MapSize.Height];
             var layer = Map.Layers["Items"];
-            var tset = Map.Tilesets.First();
-            var tiles = tset.Tiles.ToDictionary(t => t.Id + tset.FirstGid);
             var playerSet = false;
             var exitSet = false;
 
             foreach (var tile in layer.Tiles)
             {
                 if (tile.Gid == 0) continue; // No item here
-                var tilesetTile = tiles[tile.Gid];
-                if (tilesetTile.Properties.ContainsKey("Type"))
-                {
-                    var type = tiles[tile.Gid].Properties["Type"];
-                    var sprite = SpriteLibrary[tile.Gid];
+                var sprite = SpriteLibrary[tile.Gid];
 
-                    switch (type)
-                    {
-                        case "Gold":
-                            cells[tile.X, tile.Y] = new Gold();
-                            break;
-                        case "Key":
-                            cells[tile.X, tile.Y] = new Key(SpriteLibrary[tile.Gid]);
-                            break;
-                        case "Start":
-                            if (playerSet) throw new ArgumentException("Map contains multiple start locations");
-                            PlayerLocation = new Point(tile.X, tile.Y);
-                            Player = new Player();
-                            playerSet = true;
-                            break;
-                        case "Door":
-                            cells[tile.X, tile.Y] = new Door(SpriteLibrary[tile.Gid]);
-                            break;
-                        case "Scroll":
-                            if( ! Map.Properties.ContainsKey("ScrollMessage")) throw new ArgumentException("Map contains scrolls but no ScrollMessage");
-                            var msg = Map.Properties["ScrollMessage"];
-                            msg = msg.Replace('~', '\n');
-                            cells[tile.X, tile.Y] = new Scroll(msg, sprite);
-                            break;
-                        case "Crate":
-                            cells[tile.X, tile.Y] = new Crate(sprite);
-                            break;
-                        case "Boulder":
-                            cells[tile.X, tile.Y] = new Boulder(sprite);
-                            break;
-                        case "Exit":
-                            if(exitSet) throw new ArgumentException("Map contains multiple exits");
-                            Exit = new Exit();
-                            cells[tile.X, tile.Y] = Exit;
-                            exitSet = true;
-                            break;
-                        default:
-                            cells[tile.X, tile.Y] = new Item { Type = type, Sprite = sprite };
-                            break;
-                    }
+                switch (sprite.Type)
+                {
+                    case "Gold":
+                        cells[tile.X, tile.Y] = new Gold();
+                        break;
+                    case "Key":
+                        cells[tile.X, tile.Y] = new Key(sprite);
+                        break;
+                    case "Start":
+                        if (playerSet) throw new ArgumentException("Map contains multiple start locations");
+                        PlayerLocation = new Point(tile.X, tile.Y);
+                        Player = new Player();
+                        playerSet = true;
+                        break;
+                    case "Door":
+                        cells[tile.X, tile.Y] = new Door(sprite);
+                        break;
+                    case "Scroll":
+                        if( ! Map.Properties.ContainsKey("ScrollMessage")) throw new ArgumentException("Map contains scrolls but no ScrollMessage");
+                        var msg = Map.Properties["ScrollMessage"];
+                        msg = msg.Replace('~', '\n');
+                        cells[tile.X, tile.Y] = new Scroll(msg, sprite);
+                        break;
+                    case "Crate":
+                        cells[tile.X, tile.Y] = new Crate(sprite);
+                        break;
+                    case "Boulder":
+                        cells[tile.X, tile.Y] = new Boulder(sprite);
+                        break;
+                    case "Exit":
+                        if(exitSet) throw new ArgumentException("Map contains multiple exits");
+                        Exit = new Exit();
+                        cells[tile.X, tile.Y] = Exit;
+                        exitSet = true;
+                        break;
+                    default:
+                        cells[tile.X, tile.Y] = new Item { Type = sprite.Type, Sprite = sprite };
+                        break;
                 }
             }
 
@@ -163,15 +156,6 @@ namespace PuzzleGame
             if (!exitSet) throw new ArgumentException("Map contains no exit");
 
             return cells;
-        }
-
-        private Color ReadColor(TmxTilesetTile tilesetTile)
-        {
-            Color color;
-            if (! tilesetTile.Properties.ContainsKey("Color")) throw new ArgumentException("Key doesn't have a Color property");
-            if (! Enum.TryParse(tilesetTile.Properties["Color"], true, out color))
-                throw new ArgumentException("Key has unrecognized color " + tilesetTile.Properties["Color"]);
-            return color;
         }
 
         private Size ReadMapSize()

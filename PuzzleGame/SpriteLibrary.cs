@@ -16,6 +16,8 @@ namespace PuzzleGame
     /// - The Type property
     /// - The rectangle for drawing
     /// - the Gid for reading the map
+    /// 
+    /// We can use these as a handy identifier for tiles, like for creating objects based on the tiles in a map.
     /// </summary>
     public class Sprite
     {
@@ -47,6 +49,8 @@ namespace PuzzleGame
             SpritesByGid = new Dictionary<int, Sprite>();
             SpritesByType = new Dictionary<string, Sprite>();
 
+            // Note that this only loops through tiles that have properties set on them.
+            // Afterward, we need to create the rest of the tiles too
             foreach (var tile in tset.Tiles)
             {
                 var spr = new Sprite {Gid = tile.Id + tset.FirstGid};
@@ -64,8 +68,22 @@ namespace PuzzleGame
                     SpritesByType[spr.Type] = spr;
                 }
             }
+
+            int maxGid = (int) (tset.Image.Width/TileSize.Width*tset.Image.Height/TileSize.Height);
+            for (int n = tset.FirstGid; n <= maxGid; n++)
+            {
+                if (SpritesByGid.ContainsKey(n)) continue;
+                SpritesByGid[n] = new Sprite {Gid = n, Rectangle = GidToRectangle(n)};
+                Sprites.Add(SpritesByGid[n]);
+            }
         }
 
+        /// <summary>
+        /// Take a tile Gid and return its rectangle.
+        /// TODO: This assumes only one tileset
+        /// </summary>
+        /// <param name="gid"></param>
+        /// <returns></returns>
         private Rectangle GidToRectangle(int gid)
         {
             if (gid == 0) throw new ArgumentException("0 is not a valid Gid");
