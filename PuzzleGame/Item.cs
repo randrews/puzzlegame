@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PuzzleGame.Items;
 
 namespace PuzzleGame
 {
@@ -14,6 +14,13 @@ namespace PuzzleGame
         /// sprites themselves. This makes the map loading code a LOT simpler.
         /// </summary>
         public static SpriteLibrary SpriteLibrary { get; set; }
+
+        /// <summary>
+        /// Just like we share a sprite library for all items, we'll share a Random. This is just to make the
+        /// code in each item a little simpler, and the loading code a little simpler, at the cost of some
+        /// extra initialization for the Item class.
+        /// </summary>
+        public static Random Random { get; set; }
 
         public string Type { get; set; }
         public Rectangle? Rectangle { get; set; }
@@ -59,163 +66,8 @@ namespace PuzzleGame
         public Item()
         {
             Dead = false;
-        }
-    }
-
-    public class Player : AnimatableItem
-    {
-        /// <summary>
-        /// The number of keys of each color the player has
-        /// </summary>
-        public Dictionary<Color, int> Keys { get; private set; }
-
-        public Player(AnimationFrame[] animationFrames) : base(animationFrames, 0)
-        {
-            Type = "Player";
-            Keys = new Dictionary<Color, int>();
-            Keys[Color.Red] = Keys[Color.Blue] = Keys[Color.Green] = Keys[Color.Yellow] = 0;
-        }
-
-        public bool HasAnyKeys()
-        {
-            return Keys.Any(pair => pair.Value > 0);
-        }
-    }
-
-    public class Gold : AnimatableItem
-    {
-        public Gold(AnimationFrame[] animationFrames, int startTick) : base(animationFrames, startTick)
-        {
-            Type = "Gold";
-            Solid = false;
-        }
-
-        public override void PlayerEnter(Player player, GameController controller)
-        {
-            Dead = true;
-        }
-    }
-
-    public class Key : Item
-    {
-        public Color Color { get; private set; }
-
-        public Key(Color color, Rectangle rectangle)
-        {
-            Color = color;
-            Rectangle = rectangle;
-            Solid = false;
-        }
-
-        public override void PlayerEnter(Player player, GameController controller)
-        {
-            player.Keys[Color]++;
-            Dead = true;
-        }
-    }
-
-    public class Door : Item
-    {
-        public Color Color { get; private set; }
-
-        public Door(Color color, Rectangle rectangle)
-        {
-            Color = color;
-            Rectangle = rectangle;
-            Solid = true;
-        }
-
-        public override void Bump(Player player)
-        {
-            base.Bump(player);
-            if (player.Keys[Color] == 0) return;
-            player.Keys[Color]--;
-            Dead = true;
-        }
-    }
-
-    public class Scroll : Item
-    {
-        private string _message;
-
-        public Scroll(string message, Rectangle rectangle)
-        {
-            Rectangle = rectangle;
-            _message = message;
-            Solid = false;
-        }
-
-        public override void PlayerEnter(Player player, GameController controller)
-        {
-            controller.ShowMessage(_message);
-        }
-    }
-
-    public class Exit : Item
-    {
-        private Rectangle _openRectangle;
-
-        public Exit(Rectangle rectangle, Rectangle openRectangle)
-        {
-            Rectangle = rectangle;
-            _openRectangle = openRectangle;
-            Solid = true;
-        }
-
-        /// <summary>
-        /// Called by the controller when the last gem is picked up
-        /// </summary>
-        public void Open()
-        {
-            Solid = false;
-            Rectangle = _openRectangle;
-        }
-
-        public override void PlayerEnter(Player player, GameController controller)
-        {
-            base.PlayerEnter(player, controller);
-            controller.ExitLevel();
-        }
-    }
-
-    public class Crate : Item
-    {
-        public Crate(Rectangle rectangle)
-        {
-            Rectangle = rectangle;
-            Pushable = true;
-            Solid = true;
-            Heavy = false;
-        }
-    }
-
-    public class Boulder : Item
-    {
-        public Boulder(Rectangle rectangle)
-        {
-            Rectangle = rectangle;
-            Pushable = true;
-            Solid = true;
-            Heavy = true;
-        }
-    }
-
-    public class PlainFloor : Item
-    {
-        public PlainFloor(Rectangle rectangle)
-        {
-            Rectangle = rectangle;
-        }
-    }
-
-    public class SwitchFloor : Item
-    {
-        public Color Color { get; private set; }
-
-        public SwitchFloor(Color color, Rectangle rectangle)
-        {
-            Color = color;
-            Rectangle = rectangle;
+            if(Random == null || SpriteLibrary == null)
+                throw new Exception("You must initialize the Item class with a Random and a SpliteLibrary before creating items.");
         }
     }
 }

@@ -1,14 +1,10 @@
-﻿
-namespace PuzzleGame
+﻿namespace PuzzleGame.Items
 {
-    public partial class GameController
+    public class Gold : AnimatableItem
     {
-        internal AnimationFrame[] GoldAnimationFrames { get; private set; }
-        internal AnimationFrame[] PlayerAnimationFrames { get; private set; }
-
-        private void SetupAnimationFrames()
+        public Gold()
         {
-            GoldAnimationFrames = new[]
+            SetAnimation(new[]
             {
                 new AnimationFrame{Rectangle = SpriteLibrary["Gold"].Rectangle, Ticks = 30},
                 new AnimationFrame{Rectangle = SpriteLibrary["Gold1"].Rectangle, Ticks = 1},
@@ -16,13 +12,14 @@ namespace PuzzleGame
                 new AnimationFrame{Rectangle = SpriteLibrary["Gold3"].Rectangle, Ticks = 1},
                 new AnimationFrame{Rectangle = SpriteLibrary["Gold2"].Rectangle, Ticks = 1},
                 new AnimationFrame{Rectangle = SpriteLibrary["Gold1"].Rectangle, Ticks = 1},
-            };
+            }, Random.Next(30));
+            Type = "Gold";
+            Solid = false;
+        }
 
-            PlayerAnimationFrames = new[]
-            {
-                new AnimationFrame{Rectangle = SpriteLibrary["Player1"].Rectangle, Ticks = 5},
-                new AnimationFrame{Rectangle = SpriteLibrary["Player2"].Rectangle, Ticks = 5},
-            };
+        public override void PlayerEnter(Player player, GameController controller)
+        {
+            Dead = true;
         }
     }
 }

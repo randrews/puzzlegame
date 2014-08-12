@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using PuzzleGame.Items;
 using TiledSharp;
 
 namespace PuzzleGame
@@ -107,8 +108,6 @@ namespace PuzzleGame
             var playerSet = false;
             var exitSet = false;
 
-            var rand = new Random();
-
             foreach (var tile in layer.Tiles)
             {
                 if (tile.Gid == 0) continue; // No item here
@@ -122,7 +121,7 @@ namespace PuzzleGame
                     switch (type)
                     {
                         case "Gold":
-                            cells[tile.X, tile.Y] = new Gold(GoldAnimationFrames, rand.Next(30));
+                            cells[tile.X, tile.Y] = new Gold();
                             break;
                         case "Key":
                             cells[tile.X, tile.Y] = new Key(ReadColor(tilesetTile), (Rectangle) rect);
@@ -130,7 +129,7 @@ namespace PuzzleGame
                         case "Start":
                             if (playerSet) throw new ArgumentException("Map contains multiple start locations");
                             PlayerLocation = new Point(tile.X, tile.Y);
-                            Player = new Player(PlayerAnimationFrames);
+                            Player = new Player();
                             playerSet = true;
                             break;
                         case "Door":

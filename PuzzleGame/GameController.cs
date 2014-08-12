@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using PuzzleGame.Items;
 using TiledSharp;
 
 namespace PuzzleGame
@@ -64,8 +65,8 @@ namespace PuzzleGame
             Map = map;
             SpriteLibrary = new SpriteLibrary(map);
             Item.SpriteLibrary = SpriteLibrary;
+            Item.Random = new Random();
 
-            SetupAnimationFrames();
             MapSize = ReadMapSize();
             NextLevel = ReadNextLevel();
             Items = LoadItems();

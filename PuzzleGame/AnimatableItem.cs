@@ -28,7 +28,7 @@ namespace PuzzleGame
         /// </summary>
         /// <param name="animationFrames">The list of animation frames</param>
         /// <param name="startTick">The tick to start on (must be between 0 and the total number of ticks in animationFrames)</param>
-        protected AnimatableItem(AnimationFrame[] animationFrames, int startTick)
+        protected void SetAnimation(AnimationFrame[] animationFrames, int startTick)
         {
             if (animationFrames == null) throw new ArgumentNullException("animationFrames");
             if (animationFrames.Length < 1) throw new ArgumentException("No animation frames given");

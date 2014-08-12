@@ -48,9 +48,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnimatableItem.cs" />
-    <Compile Include="Animations.cs" />
     <Compile Include="GameController.cs" />
     <Compile Include="Item.cs" />
+    <Compile Include="Items\Boulder.cs" />
+    <Compile Include="Items\Crate.cs" />
+    <Compile Include="Items\Door.cs" />
+    <Compile Include="Items\Exit.cs" />
+    <Compile Include="Items\Gold.cs" />
+    <Compile Include="Items\Key.cs" />
+    <Compile Include="Items\PlainFloor.cs" />
+    <Compile Include="Items\Player.cs" />
+    <Compile Include="Items\Scroll.cs" />
+    <Compile Include="Items\SwitchFloor.cs" />
     <Compile Include="Loading.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
