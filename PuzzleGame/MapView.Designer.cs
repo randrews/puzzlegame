@@ -30,12 +30,19 @@
         {
             this.components = new System.ComponentModel.Container();
             this.animationTimer = new System.Windows.Forms.Timer(this.components);
+            this.turnTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // animationTimer
             // 
             this.animationTimer.Enabled = true;
             this.animationTimer.Tick += new System.EventHandler(this.animationTimer_Tick);
+            // 
+            // turnTimer
+            // 
+            this.turnTimer.Enabled = true;
+            this.turnTimer.Interval = 1000;
+            this.turnTimer.Tick += new System.EventHandler(this.turnTimer_Tick);
             // 
             // MapView
             // 
@@ -54,5 +61,6 @@
         #endregion
 
         private System.Windows.Forms.Timer animationTimer;
+        private System.Windows.Forms.Timer turnTimer;
     }
 }

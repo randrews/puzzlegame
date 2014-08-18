@@ -156,5 +156,12 @@ namespace PuzzleGame
             if (Controller != null) Controller.AnimationTick();
             Refresh();
         }
+
+        private void turnTimer_Tick(object sender, EventArgs e)
+        {
+            if (ShowingMessage) return;
+            if (Controller != null) Controller.TurnTick();
+            Refresh();
+        }
     }
 }

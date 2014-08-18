@@ -89,35 +89,7 @@ namespace PuzzleGame
         internal void MoveCommand(Direction direction)
         {
             var newLocation = Grid<Item>.TranslateLocation(PlayerLocation, direction);
-
-            if (Items.InBounds(newLocation) && Walls[newLocation] == null) // No wall there
-            {
-                // First, is there an item there? If not, we're good
-                if (Items[newLocation] == null)
-                    PlayerLocation = newLocation;
-                else
-                {
-                    var item = Items[newLocation];
-                    if (!item.Solid) // There's an item but it's not solid. Move on top of it, and tell it so
-                    {
-                        PlayerLocation = newLocation;
-                        item.PlayerEnter(Player, this);
-                        if (Floors[newLocation] != null) Floors[newLocation].PlayerEnter(Player, this);
-                    }
-                    else if (item.Pushable) // Try pushing the object
-                    {
-                        if(TryPush(newLocation, direction, true)) // This returns true if it can be pushed, with the side effect of actually pushing it
-                        {
-                            PlayerLocation = newLocation;
-                            if (Floors[newLocation] != null) Floors[newLocation].PlayerEnter(Player, this);
-                        }
-                    }
-                    else // It's solid, so bump into it and see what it does
-                    {
-                        item.Bump(Player);
-                    }
-                }
-            }
+            TryMove(PlayerLocation, direction, true);
 
             // We just had a turn and a tick, so, fire those:
             Items.Each((item, point) => item.Turn(this, point));
@@ -136,20 +108,60 @@ namespace PuzzleGame
             if (!Items.OfType<Gold>().Any())
                 Items.OfType<Exit>().First().Open();
 
-            // If there are no inactive switches, open some gates:
-            var switches = Floors.OfType<SwitchFloor>();
-            
+            // If there are no inactive switches, open some gates:            
             foreach (Color color in Enum.GetValues(typeof(Color)))
             {
-                var gates = Items.OfTypeAndColor<Gate>(color).ToList();
-                var floors = Floors.OfTypeAndColor<SwitchFloor>(color);
+                var gates = Items.OfTypeAndColor<Gate>(color);
+                var switches = Floors.OfTypeAndColor<SwitchFloor>(color);
 
-                if (floors.Any(s => !((SwitchFloor)s).Active))
+                if (switches.Any(s => !((SwitchFloor)s).Active))
                     gates.ForEach(g => ((Gate)g).Open = false);
                 else
                     gates.ForEach(g => ((Gate)g).Open = true);
             }
 
+        }
+
+        /// <summary>
+        /// Try to move something at location, in direction. Returns true (and moves the object) if the move is possible.
+        /// </summary>
+        /// <param name="location">Location the object starts in</param>
+        /// <param name="direction">Direction it wants to move</param>
+        /// <param name="byPlayer">True iff it's the player moving</param>
+        /// <returns></returns>
+        public bool TryMove(Point location, Direction direction, bool byPlayer)
+        {
+            var newLocation = Grid<Item>.TranslateLocation(location, direction);
+            var canMove = false;
+
+            // A couple obvious cases: out of the map, and into a wall, are impossible.
+            if (!Items.InBounds(newLocation)) return false;
+            if (Walls[newLocation] != null) return false;
+
+            var itemAtDest = Items[newLocation];
+
+            if (itemAtDest == null) canMove = true; // Nothing in the way, go ahead and do the move:
+            else if (!itemAtDest.Solid) canMove = byPlayer; // The player may move into non-solid objects
+            else if (itemAtDest.Pushable) // Maybe we can push it?
+                canMove = TryPush(newLocation, direction, byPlayer);
+            else if (byPlayer) itemAtDest.Bump(Player); // The player can bump things he can't move into
+
+            if (canMove)
+            {
+                // Actually do the move, either by changing player location or by moving an Item
+                if (byPlayer) PlayerLocation = newLocation;
+                else
+                {
+                    Items[newLocation] = Items[location];
+                    Items[location] = null;
+                }
+
+                // Do PlayerEnter stuff:
+                if (byPlayer && itemAtDest != null) itemAtDest.PlayerEnter(Player, this);
+                if (byPlayer && Floors[newLocation] != null) Floors[newLocation].PlayerEnter(Player, this);
+            }
+
+            return canMove;
         }
 
         /// <summary>
@@ -212,6 +224,25 @@ namespace PuzzleGame
             if(Player != null) Player.Animate();
         }
 
+        /// <summary>
+        /// Called once a second when the turn timer ticks. This lets things move around
+        /// without the player taking action.
+        /// </summary>
+        public void TurnTick()
+        {
+            Items.Each((item, point) =>
+            {
+                item.Tick(this, point);
+                item.Turn(this, point);
+            });
+
+            Floors.Each((item, point) =>
+            {
+                item.Tick(this, point);
+                item.Turn(this, point);                
+            });
+        }
+
         public string GetStatusLabel()
         {
             if (!Player.HasAnyKeys()) return "";
@@ -252,6 +283,11 @@ namespace PuzzleGame
         public static IEnumerable<Item> OfTypeAndColor<T>(this Grid<Item> grid, Color color) where T : Item
         {
             return grid.OfType<T>().Where(i => i.Color == color);
-        } 
+        }
+
+        public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action )
+        {
+            enumerable.ToList().ForEach(action);
+        }
     }
 }
