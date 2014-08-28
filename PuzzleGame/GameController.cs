@@ -91,15 +91,26 @@ namespace PuzzleGame
             var newLocation = Grid<Item>.TranslateLocation(PlayerLocation, direction);
             TryMove(PlayerLocation, direction, true);
 
-            // We just had a turn and a tick, so, fire those:
-            Items.Each((item, point) => item.Turn(this, point));
-            Floors.Each((floor, point) => floor.Turn(this, point));
-
-            // Now, remove any items that died this round
+            // We just had a turn, so, fire those events:
+            var finished = new HashSet<Item>();
             Items.Each((item, point) =>
             {
-                if (item.Dead) Items[point] = null;
+                if (finished.Contains(item)) return;
+                finished.Add(item);
+                item.Turn(this, point);
             });
+            Floors.Each((floor, point) => floor.Turn(this, point));
+
+            UpdateLevel();
+        }
+
+        /// <summary>
+        /// Do all the updates that happen after a turn
+        /// </summary>
+        private void UpdateLevel()
+        {
+            // Now, remove any items that died this round
+            Items.Each((item, point) => { if (item.Dead) Items[point] = null; });
 
             // Update the status label
             Window.UpdateStatusLabel(GetStatusLabel());
@@ -109,17 +120,16 @@ namespace PuzzleGame
                 Items.OfType<Exit>().First().Open();
 
             // If there are no inactive switches, open some gates:            
-            foreach (Color color in Enum.GetValues(typeof(Color)))
+            foreach (Color color in Enum.GetValues(typeof (Color)))
             {
                 var gates = Items.OfTypeAndColor<Gate>(color);
                 var switches = Floors.OfTypeAndColor<SwitchFloor>(color);
 
-                if (switches.Any(s => !((SwitchFloor)s).Active))
-                    gates.ForEach(g => ((Gate)g).Open = false);
+                if (switches.Any(s => !((SwitchFloor) s).Active))
+                    gates.ForEach(g => ((Gate) g).Open = false);
                 else
-                    gates.ForEach(g => ((Gate)g).Open = true);
+                    gates.ForEach(g => ((Gate) g).Open = true);
             }
-
         }
 
         /// <summary>
@@ -137,6 +147,9 @@ namespace PuzzleGame
             // A couple obvious cases: out of the map, and into a wall, are impossible.
             if (!Items.InBounds(newLocation)) return false;
             if (Walls[newLocation] != null) return false;
+
+            // Don't let non-player things move on to the player
+            if (!byPlayer && newLocation == PlayerLocation) return false;
 
             var itemAtDest = Items[newLocation];
 
@@ -176,6 +189,7 @@ namespace PuzzleGame
             var newLocation = Grid<Item>.TranslateLocation(location, direction);
             if (! Items.InBounds(newLocation)) return false; // First, are we trying to push it off the map?
             if (Walls[newLocation] != null) return false; // Trying to push into a wall, so no.
+            if (newLocation == PlayerLocation) return false; // We also can't push something on to the player
 
             var pushed = Items[location]; // The thing we're pushing
             var pushedInto = Items[newLocation]; // Contents of the space we're pushing it into
@@ -230,8 +244,12 @@ namespace PuzzleGame
         /// </summary>
         public void TurnTick()
         {
+            var finished = new HashSet<Item>();
+
             Items.Each((item, point) =>
             {
+                if (finished.Contains(item)) return;
+                finished.Add(item);
                 item.Tick(this, point);
                 item.Turn(this, point);
             });
@@ -241,6 +259,8 @@ namespace PuzzleGame
                 item.Tick(this, point);
                 item.Turn(this, point);                
             });
+
+            UpdateLevel();
         }
 
         public string GetStatusLabel()

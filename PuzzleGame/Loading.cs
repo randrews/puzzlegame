@@ -129,6 +129,9 @@ namespace PuzzleGame
                     case "Boulder":
                         cells[tile.X, tile.Y] = new Boulder(sprite);
                         break;
+                    case "Skull":
+                        cells[tile.X, tile.Y] = new Skull(sprite);
+                        break;
                     case "Exit":
                         cells[tile.X, tile.Y] = new Exit();
                         break;

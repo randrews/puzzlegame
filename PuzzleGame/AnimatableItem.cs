@@ -46,6 +46,11 @@ namespace PuzzleGame
             Sprite = _animationFrames[_frame].Sprite;
         }
 
+        protected void SetAnimation(AnimationFrame[] frames)
+        {
+            SetAnimation(frames, 0);
+        }
+
         private Rectangle[] CreateFrameOrder(Rectangle[] animationFrames)
         {
             var frames = new Rectangle[animationFrames.Length * 2 - 2];
